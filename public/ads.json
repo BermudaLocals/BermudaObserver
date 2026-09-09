@@ -1,0 +1,14 @@
+[
+  {
+    "slot": "sidebar-1",
+    "imageUrl": "/images/beach.jpg",
+    "linkUrl": "https://creatorempire.app",
+    "label": "CreatorEmpire.app — AI Viral Video Studio · Try Free Today"
+  },
+  {
+    "slot": "sidebar-2",
+    "imageUrl": "/images/harbor-sunset.jpg",
+    "linkUrl": "https://lexai.llc",
+    "label": "LexAI.llc — AI-Powered Legal Platform for Bermuda"
+  }
+]

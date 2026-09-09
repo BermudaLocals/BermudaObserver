@@ -853,6 +853,119 @@ body {
 }
 
 /* ============================================================
+   AD ZONES — config-driven via /ads.json (sold creative or
+   "Advertise here" unsold card). Min-heights reserved so the
+   layout never jumps while hydration runs.
+   ============================================================ */
+.ad-zone {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: inherit;
+}
+
+.ad-slot-wrap { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+.ad-leaderboard-top { min-height: 96px; margin-top: 24px; }
+.ad-rect { min-height: 250px; }
+.ad-infeed { min-height: 110px; margin: 32px 0; }
+.ad-inarticle { min-height: 120px; margin: 18px 0 4px; }
+.ad-footer-banner { min-height: 96px; max-width: 1400px; margin: 0 auto 36px; }
+
+/* sponsored-story zone doubles as a news-grid card — needs its own height */
+.ad-zone[data-ad-slot="sponsored-story"] { min-height: 340px; }
+
+.ad-creative { position: absolute; inset: 0; display: block; }
+
+.ad-creative-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ad-creative-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(3,13,26,0.78), rgba(3,13,26,0.28));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.ad-creative:hover .ad-creative-overlay { background: linear-gradient(to top, rgba(3,13,26,0.85), rgba(3,13,26,0.4)); }
+
+.ad-creative-label {
+  font-family: 'Oswald', sans-serif;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+
+.ad-sponsored-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.55);
+  color: rgba(255,255,255,0.75);
+  font-size: 8px;
+  letter-spacing: 2px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.ad-unsold {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(10,61,107,0.05), rgba(0,180,216,0.05));
+  border: 2px dashed rgba(10,61,107,0.28);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  padding: 12px;
+  transition: all 0.25s;
+}
+
+.ad-unsold:hover {
+  border-color: var(--ocean-light);
+  background: linear-gradient(135deg, rgba(10,61,107,0.09), rgba(0,180,216,0.09));
+  box-shadow: 0 0 20px var(--glow-color);
+}
+
+.ad-unsold-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--ocean);
+  text-transform: uppercase;
+}
+
+.ad-unsold-sub { font-size: 11px; color: #7a93a3; }
+
+@media (max-width: 768px) {
+  .ad-leaderboard-top { min-height: 64px; margin-top: 16px; }
+  .ad-infeed { min-height: 90px; }
+  .ad-rect { min-height: 200px; }
+  .ad-creative-label { font-size: 13px; }
+}
+
+/* ============================================================
    AD BANNER
    ============================================================ */
 .ad-leaderboard {
@@ -2168,6 +2281,11 @@ body {
   </nav>
 </div>
 
+<!-- ===== AD ZONE: TOP LEADERBOARD ===== -->
+<div class="ad-slot-wrap">
+  <div class="ad-zone ad-leaderboard-top" data-ad-slot="leaderboard"></div>
+</div>
+
 <!-- ===== MAIN BODY ===== -->
 <main class="site-body">
 
@@ -2325,6 +2443,9 @@ body {
         </div>
       </section>
 
+      <!-- AD ZONE: IN-FEED 1 -->
+      <div class="ad-zone ad-infeed" data-ad-slot="infeed-1"></div>
+
       <!-- SPORTS -->
       <section id="sports-section" class="category-section">
         <div class="section-head reveal">
@@ -2365,6 +2486,9 @@ body {
           </div>
         </div>
       </section>
+
+      <!-- AD ZONE: IN-FEED 2 -->
+      <div class="ad-zone ad-infeed" data-ad-slot="infeed-2"></div>
 
       <!-- JOBS & EMPLOYMENT -->
       <section id="jobs-section" class="category-section">
@@ -2478,6 +2602,9 @@ body {
         </div>
       </section>
 
+      <!-- AD ZONE: IN-FEED 3 -->
+      <div class="ad-zone ad-infeed" data-ad-slot="infeed-3"></div>
+
       <!-- OBITUARIES -->
       <section id="obituaries-section" class="obit-section">
         <div class="section-head reveal">
@@ -2562,15 +2689,8 @@ body {
           </div>
         </div>
 
-        <!-- SIDEBAR AD -->
-        <div class="sidebar-ad" onclick="window.open('https://creatorempire.app','_blank')">
-          <div class="sidebar-ad-inner" style="background:linear-gradient(rgba(6,30,53,0.82),rgba(10,61,107,0.72)),url('/images/beach.jpg') center/cover no-repeat;">
-            <div class="sidebar-ad-tag">SPONSORED</div>
-            <div class="sidebar-ad-domain">creatorempire.app</div>
-            <div class="sidebar-ad-desc">🎬 Create Viral Character Videos with AI</div>
-            <div class="sidebar-ad-cta">Try Free Today</div>
-          </div>
-        </div>
+        <!-- AD ZONE: SIDEBAR 1 -->
+        <div class="ad-zone ad-rect" data-ad-slot="sidebar-1"></div>
 
         <!-- WEATHER -->
         <div class="sidebar-card">
@@ -2617,15 +2737,11 @@ body {
           </div>
         </div>
 
-        <!-- SECOND SIDEBAR AD -->
-        <div class="sidebar-ad" onclick="window.open('https://lexai.llc','_blank')">
-          <div class="sidebar-ad-inner" style="background:linear-gradient(rgba(6,30,53,0.82),rgba(10,61,107,0.72)),url('/images/harbor-sunset.jpg') center/cover no-repeat;">
-            <div class="sidebar-ad-tag">SPONSORED</div>
-            <div class="sidebar-ad-domain">LexAI.llc</div>
-            <div class="sidebar-ad-desc">⚖️ AI-Powered Legal Platform for Bermuda Businesses</div>
-            <div class="sidebar-ad-cta">Get Legal Help</div>
-          </div>
-        </div>
+        <!-- AD ZONE: SIDEBAR 2 -->
+        <div class="ad-zone ad-rect" data-ad-slot="sidebar-2"></div>
+
+        <!-- AD ZONE: SIDEBAR 3 -->
+        <div class="ad-zone ad-rect" data-ad-slot="sidebar-3"></div>
 
       </div>
     </aside>
@@ -2672,6 +2788,8 @@ body {
 
 <!-- ===== FOOTER ===== -->
 <footer class="site-footer">
+  <!-- AD ZONE: FOOTER BANNER -->
+  <div class="ad-zone ad-footer-banner" data-ad-slot="footer-banner"></div>
   <div class="footer-grid">
     <div class="footer-brand">
       <div class="footer-logo">Bermuda<span class="logo-observer">Observer</span></div>
@@ -2737,7 +2855,9 @@ body {
       <div id="modal-cat" style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ocean-light);margin-bottom:10px;">NEWS</div>
       <h2 id="modal-title" style="font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#1a1a1a;margin-bottom:14px;line-height:1.3;"></h2>
       <div id="modal-meta" style="font-size:12px;color:#999;margin-bottom:20px;"></div>
-      <p id="modal-body" style="font-size:15px;color:#444;line-height:1.7;"></p>
+      <div id="modal-attrib" style="display:none;font-size:11px;color:#999;margin:-12px 0 16px;"></div>
+      <p id="modal-body" style="font-size:15px;color:#444;line-height:1.7;white-space:pre-line;"></p>
+      <div class="ad-zone ad-inarticle" data-ad-slot="in-article"></div>
       <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.08);">
         <a id="modal-link" href="#" target="_blank" style="display:inline-block;background:var(--btn-grad);color:#fff;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:1px;">READ FULL STORY →</a>
       </div>
@@ -2930,6 +3050,11 @@ function getCatImage(cat, i) {
   return '/images/' + list[(i || 0) % list.length] + '.jpg';
 }
 
+// Prefer the story's own photo (newsroom pipeline), fall back to category pool
+function getArtImg(a, i) {
+  return (a && a.image) ? a.image : getCatImage(a && a.category, i);
+}
+
 const sources = ['Bernews', 'TNN BDA', 'Royal Gazette', 'BermudaObserver', 'The Island'];
 function getSource(article) {
   return article.source || sources[Math.floor(Math.random() * sources.length)];
@@ -3011,7 +3136,7 @@ function renderHero() {
   sub.innerHTML = subArts.map((a, i) => `
     <div class="sub-card" onclick="openArticle(${i+1})">
       <div class="sub-card-img">
-        <img src="${getCatImage(a.category, i)}" alt="${(a.category || 'News')} — Bermuda" loading="lazy">
+        <img src="${getArtImg(a, i)}" alt="${(a.category || 'News')} — Bermuda" loading="lazy">
       </div>
       <div class="sub-card-body">
         <span class="sub-card-cat">${(a.category || 'News').toUpperCase()}</span>
@@ -3026,6 +3151,7 @@ function renderNewsGrid() {
   const grid = document.getElementById('news-grid');
   const arts = allArticles.slice(0, 12);
   grid.innerHTML = arts.map((a, i) => createArticleCard(a, i)).join('');
+  injectSponsoredStory();
   observeReveal();
 }
 
@@ -3046,7 +3172,7 @@ function renderGovSection() {
   const fallbackArts = arts.length ? arts : allArticles.slice(0, 6);
   grid.innerHTML = fallbackArts.map((a, i) => `
     <div class="gov-card">
-      <div class="gov-card-img"><img src="${getCatImage(a.category, i)}" alt="${(a.category || 'Government')} — Bermuda" loading="lazy"></div>
+      <div class="gov-card-img"><img src="${getArtImg(a, i)}" alt="${(a.category || 'Government')} — Bermuda" loading="lazy"></div>
       <div class="gov-card-body">
         <div class="gov-card-title">${a.title}</div>
         <div class="gov-card-meta">📅 ${timeAgo(a.published_at)} &nbsp;·&nbsp; ${getSource(a)}</div>
@@ -3082,7 +3208,7 @@ function createArticleCard(article, index) {
   return `
     <div class="article-card reveal" onclick="openArticle(${index})">
       <div class="article-thumb">
-        <img src="${getCatImage(cat, index)}" alt="${(article.category || 'News')} — Bermuda" loading="lazy">
+        <img src="${getArtImg(article, index)}" alt="${(article.category || 'News')} — Bermuda" loading="lazy">
         <span class="article-cat-badge ${catClass}">${(article.category || 'News').toUpperCase()}</span>
         <span class="source-badge">${getSource(article)}</span>
       </div>
@@ -3108,11 +3234,29 @@ function openArticle(index) {
   document.getElementById('modal-cat').textContent = (article.category || 'NEWS').toUpperCase();
   document.getElementById('modal-title').textContent = article.title;
   document.getElementById('modal-meta').textContent = getSource(article) + '  ·  ' + timeAgo(article.published_at);
-  document.getElementById('modal-body').textContent = article.excerpt || article.summary || article.content || 'Read the full story on the source website.';
+  document.getElementById('modal-body').textContent = article.body || article.content || article.excerpt || article.summary || 'Read the full story on the source website.';
+  // Required attribution fine print: "Based on reporting by <source> — original ↗"
+  const attrib = document.getElementById('modal-attrib');
+  if (article.url && article.url !== '#') {
+    attrib.innerHTML = '';
+    const note = document.createElement('span');
+    note.textContent = 'Based on reporting by ' + getSource(article) + ' — ';
+    const a = document.createElement('a');
+    a.href = article.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.style.color = 'var(--ocean-light)';
+    a.textContent = 'original ↗';
+    attrib.appendChild(note);
+    attrib.appendChild(a);
+    attrib.style.display = 'block';
+  } else {
+    attrib.style.display = 'none';
+  }
   const link = document.getElementById('modal-link');
   link.href = article.url || '#';
   const img = document.getElementById('modal-img');
-  img.style.backgroundImage = `url('${getCatImage(article.category, index)}')`;
+  img.style.backgroundImage = `url('${getArtImg(article, index)}')`;
   modal.style.display = 'flex';
 }
 
@@ -3143,7 +3287,7 @@ function liveSearch(query) {
   results.innerHTML = matches.map((a, i) => `
     <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.03)'" onmouseout="this.style.background=''"
       onclick="document.getElementById('search-modal').style.display='none';openArticle(${allArticles.indexOf(a)});">
-      <img class="search-thumb" src="${getCatImage(a.category, i)}" alt="" loading="lazy">
+      <img class="search-thumb" src="${getArtImg(a, i)}" alt="" loading="lazy">
       <div>
         <div style="font-size:13px;font-weight:600;color:#1a1a1a;">${a.title}</div>
         <div style="font-size:11px;color:#999;margin-top:3px;">${(a.category||'News').toUpperCase()} · ${timeAgo(a.published_at)}</div>
@@ -3386,12 +3530,77 @@ function setupAutoRefresh() {
 }
 
 // ============================================================
+// AD ZONES — hydrated from /ads.json (sold creative or unsold
+// "Advertise here" card). No ad library. Boss edits ads.json.
+// ============================================================
+let adsConfig = null;
+
+async function loadAdsConfig() {
+  if (adsConfig) return adsConfig;
+  try {
+    const res = await fetch('/ads.json');
+    adsConfig = res.ok ? await res.json() : [];
+  } catch (e) { adsConfig = []; }
+  if (!Array.isArray(adsConfig)) adsConfig = [];
+  return adsConfig;
+}
+
+function findActiveAd(slot) {
+  const now = Date.now();
+  return (adsConfig || []).find(a =>
+    a.slot === slot &&
+    a.imageUrl && a.linkUrl &&
+    (!a.start || Date.parse(a.start) <= now) &&
+    (!a.end || Date.parse(a.end) >= now)
+  ) || null;
+}
+
+function hydrateAdSlots() {
+  document.querySelectorAll('[data-ad-slot]').forEach(el => {
+    const slot = el.getAttribute('data-ad-slot');
+    const sold = findActiveAd(slot);
+    if (sold) {
+      el.innerHTML = `<a class="ad-creative" href="${sold.linkUrl}" target="_blank" rel="sponsored noopener">
+        <img class="ad-creative-img" src="${sold.imageUrl}" alt="${sold.label || 'Advertisement'}" loading="lazy">
+        <span class="ad-sponsored-tag">SPONSORED</span>
+        <span class="ad-creative-overlay"><span class="ad-creative-label">${sold.label || ''}</span></span>
+      </a>`;
+    } else if (!el.querySelector('.ad-unsold')) {
+      el.innerHTML = `<div class="ad-unsold" onclick="scrollToSection('classifieds-section')" role="button">
+        <span class="ad-unsold-title">Advertise Here — Reach Bermuda</span>
+        <span class="ad-unsold-sub">${slot.replace(/-/g, ' ')} slot · your brand to an island-wide audience</span>
+      </div>`;
+    }
+  });
+}
+
+async function initAds() {
+  await loadAdsConfig();
+  hydrateAdSlots();
+}
+
+// "Sponsored Story" slot inside the news grid (clearly labeled when sold)
+async function injectSponsoredStory() {
+  const grid = document.getElementById('news-grid');
+  if (!grid || grid.querySelector('[data-ad-slot="sponsored-story"]')) return;
+  const card = document.createElement('div');
+  card.className = 'article-card ad-zone';
+  card.setAttribute('data-ad-slot', 'sponsored-story');
+  const kids = grid.children;
+  if (kids.length >= 4) grid.insertBefore(card, kids[3]);
+  else grid.appendChild(card);
+  await loadAdsConfig();
+  hydrateAdSlots();
+}
+
+// ============================================================
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   applyHolidayTheme();
   updateHeaderDate();
   fetchNews();
+  initAds();
   observeReveal();
   setupStickyNav();
   initParticles();

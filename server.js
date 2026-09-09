@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const newsroom = require('./newsroom');
 const app = express();
 const PORT = process.env.PORT || 3025;
 app.use(cors()); app.use(express.json());
@@ -50,7 +51,15 @@ app.get('/api/headlines', (req,res) => {
   if (category && category !== 'all') r = r.filter(h => h.category === category);
   res.json({headlines:r, lastUpdated: new Date().toISOString()});
 });
+// AI newsroom: original rewritten Bermuda stories (array — the shape fetchNews() expects).
+// 503 while the first poll is still running so the frontend uses its built-in fallback.
+app.get('/api/news', (req,res) => {
+  const a = newsroom.getArticles();
+  if (!a.length) return res.status(503).json({error:'newsroom warming up, first poll in progress'});
+  res.json(a);
+});
+app.get('/api/news/status', (req,res) => res.json(newsroom.getStatus()));
 app.get('/api/health', (req,res) => res.json({status:'ok',service:'BermudaObserver'}));
 app.get('*', (req,res) => { const f = path.join(__dirname,'public','index.html'); require('fs').existsSync(f) ? res.sendFile(f) : res.json({status:'ok',service:'BermudaObserver',api:'/api/headlines'}); });
 app.listen(PORT, () => console.log(`🇧🇲 BermudaObserver :${PORT}`));
-// override the broken sendFile route — serve JSON if no HTML
+newsroom.start();
