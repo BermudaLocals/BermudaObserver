@@ -1,0 +1,74 @@
+[
+  {
+    "file": "hero.jpg",
+    "photographer": "Brandon Morrison",
+    "alt": "Aerial view of Bermuda's coastline at sunrise showcasing vibrant houses and calm waters.",
+    "pexels_url": "https://www.pexels.com/photo/scenic-bermuda-coastline-at-sunrise-with-colorful-houses-38006681/"
+  },
+  {
+    "file": "beach.jpg",
+    "photographer": "Andrea Powell",
+    "alt": "A serene sandy beach in Bermuda featuring turquoise waters and unique rock formations.",
+    "pexels_url": "https://www.pexels.com/photo/a-sandy-beach-with-rock-formations-7910129/"
+  },
+  {
+    "file": "coastline.jpg",
+    "photographer": "Brandon Morrison",
+    "alt": "A stunning aerial view of Bermuda's rocky coastline with turquoise waters and waves crashing.",
+    "pexels_url": "https://www.pexels.com/photo/aerial-view-of-bermuda-s-rocky-shoreline-34406311/"
+  },
+  {
+    "file": "harbor.jpg",
+    "photographer": "Brandon Morrison",
+    "alt": "Explore the vibrant harbor of Bermuda with boats dotting the turquoise sea from above.",
+    "pexels_url": "https://www.pexels.com/photo/photo-of-the-bay-with-ships-6029550/"
+  },
+  {
+    "file": "town.jpg",
+    "photographer": "Christy Rice",
+    "alt": "Scenic view of tropical landscape with colorful houses and palm trees under blue skies.",
+    "pexels_url": "https://www.pexels.com/photo/houses-between-palm-trees-2300962/"
+  },
+  {
+    "file": "cottages.jpg",
+    "photographer": "Brandon Morrison",
+    "alt": "Stunning aerial photo capturing colorful coastal homes in Bermuda against the turquoise Atlantic Ocean.",
+    "pexels_url": "https://www.pexels.com/photo/aerial-view-of-colorful-bermuda-coastline-homes-38006682/"
+  },
+  {
+    "file": "boats.jpg",
+    "photographer": "Brandon Morrison",
+    "alt": "A breathtaking aerial view of numerous boats in the turquoise waters near Sandys Parish, Bermuda.",
+    "pexels_url": "https://www.pexels.com/photo/white-boats-on-sea-6029549/"
+  },
+  {
+    "file": "cricket.jpg",
+    "photographer": "Lorien le Poer Trench",
+    "alt": "Action shot of a cricketer batting during an outdoor match on a sunny day.",
+    "pexels_url": "https://www.pexels.com/photo/exciting-outdoor-cricket-match-in-progress-30387494/"
+  },
+  {
+    "file": "sunset.jpg",
+    "photographer": "Life_As_Pixels",
+    "alt": "Breathtaking sunset in Bermuda with a striking silhouette of a palm tree against vibrant skies.",
+    "pexels_url": "https://www.pexels.com/photo/tropical-landscape-with-sunset-18526337/"
+  },
+  {
+    "file": "harbor-sunset.jpg",
+    "photographer": "Brandon Morrison",
+    "alt": "Stunning aerial view of colorful Bermudian houses along the coast at sunset. Perfect for travel inspiration.",
+    "pexels_url": "https://www.pexels.com/photo/aerial-view-of-bermuda-coastline-at-sunset-38006678/"
+  },
+  {
+    "file": "reef.jpg",
+    "photographer": "Brandon Morrison",
+    "alt": "Stunning aerial view of Bermuda's coastline with clear waters, reefs, and lush greenery.",
+    "pexels_url": "https://www.pexels.com/photo/aerial-view-of-green-trees-and-blue-sea-6053556/"
+  },
+  {
+    "file": "cruise.jpg",
+    "photographer": "Brandon Morrison",
+    "alt": "Colorful houses in Bermuda with cruise ships on the horizon during sunset.",
+    "pexels_url": "https://www.pexels.com/photo/vibrant-bermuda-townscape-overlooking-the-ocean-38006674/"
+  }
+]

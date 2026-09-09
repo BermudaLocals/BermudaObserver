@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BermudaObserver — Bermuda's AI-Powered News</title>
+<!--
+  PHOTO CREDITS — real Bermuda imagery via Pexels (https://www.pexels.com)
+  hero.jpg, coastline.jpg, harbor.jpg, boats.jpg, cottages.jpg, harbor-sunset.jpg, cruise.jpg, reef.jpg — Brandon Morrison
+  beach.jpg — Andrea Powell · town.jpg — Christy Rice
+  cricket.jpg — Lorien le Poer Trench · sunset.jpg — Life_As_Pixels
+-->
+<link rel="preload" as="image" href="/images/hero.jpg" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
@@ -641,41 +648,10 @@ body {
   object-fit: cover;
   position: absolute;
   inset: 0;
-  opacity: 0.4;
-  transition: opacity 0.4s;
+  transition: transform 0.6s ease;
 }
 
-.hero-card:hover .hero-img { opacity: 0.5; }
-
-.hero-placeholder {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-to) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.hero-placeholder::before {
-  content: '';
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 10px,
-    rgba(255,255,255,0.01) 10px,
-    rgba(255,255,255,0.01) 20px
-  );
-  animation: patternMove 20s linear infinite;
-}
-
-@keyframes patternMove {
-  0% { transform: translateX(-50%) translateY(-50%) rotate(0deg); }
-  100% { transform: translateX(-50%) translateY(-50%) rotate(360deg); }
-}
+.hero-card:hover .hero-img { transform: scale(1.03); }
 
 .hero-gradient {
   position: absolute;
@@ -794,32 +770,51 @@ body {
 
 .sub-card:hover .sub-card-img img { transform: scale(1.08); }
 
-.sub-card-img-placeholder {
+/* ===== REAL PHOTO THUMBS (Bermuda imagery) ===== */
+.gov-card-img {
+  height: 110px;
+  overflow: hidden;
+  position: relative;
+}
+
+.gov-card-img img {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--hero-from), var(--hero-to));
-  position: relative;
-  overflow: hidden;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
 }
 
-.sub-card-img-placeholder::after {
-  content: '';
-  position: absolute;
-  bottom: -20px;
-  right: -20px;
-  width: 80px;
-  height: 80px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 50%;
+.gov-card:hover .gov-card-img img { transform: scale(1.06); }
+
+.gov-card-body { padding: 14px 16px; }
+
+.obit-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.img-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 32px;
-  opacity: 0.3;
+.obit-photo-monogram {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #3a3a3a, #1f1f1f);
+  color: rgba(255,255,255,0.85);
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.search-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
 }
 
 .sub-card-body { padding: 16px; }
@@ -1087,8 +1082,6 @@ body {
     rgba(255,255,255,0.02) 16px
   );
 }
-
-.thumb-emoji { font-size: 36px; opacity: 0.35; position: relative; }
 
 .article-cat-badge {
   position: absolute;
@@ -1482,7 +1475,8 @@ body {
 .gov-card {
   background: var(--white);
   border-radius: 10px;
-  padding: 18px;
+  padding: 0;
+  overflow: hidden;
   border-left: 4px solid var(--badge-gov);
   box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   cursor: pointer;
@@ -2183,9 +2177,7 @@ body {
 
       <!-- HERO CARD -->
       <div class="hero-card" id="hero-card" onclick="openArticle(0)">
-        <div class="hero-placeholder" id="hero-placeholder">
-          <div class="thumb-emoji">🏝️</div>
-        </div>
+        <img class="hero-img" src="/images/hero.jpg" alt="Aerial view of Bermuda's coastline at sunrise with colorful cottages along the water" fetchpriority="high">
         <div class="hero-gradient"></div>
         <div class="hero-content">
           <div class="hero-badge" id="hero-badge">Featured Story</div>
@@ -2201,7 +2193,7 @@ body {
       <!-- SUB CARDS -->
       <div class="hero-sub" id="hero-sub">
         <div class="sub-card" onclick="openArticle(1)">
-          <div class="sub-card-img"><div class="sub-card-img-placeholder"><span class="img-icon">🌊</span></div></div>
+          <div class="sub-card-img"><img src="/images/coastline.jpg" alt="Aerial view of Bermuda's rocky coastline and turquoise water" loading="lazy"></div>
           <div class="sub-card-body">
             <span class="sub-card-cat">News</span>
             <div class="sub-card-title">Loading...</div>
@@ -2209,7 +2201,7 @@ body {
           </div>
         </div>
         <div class="sub-card" onclick="openArticle(2)">
-          <div class="sub-card-img"><div class="sub-card-img-placeholder"><span class="img-icon">🏄</span></div></div>
+          <div class="sub-card-img"><img src="/images/town.jpg" alt="Colorful Bermuda cottages and palm trees under blue skies" loading="lazy"></div>
           <div class="sub-card-body">
             <span class="sub-card-cat">Business</span>
             <div class="sub-card-title">Loading...</div>
@@ -2217,7 +2209,7 @@ body {
           </div>
         </div>
         <div class="sub-card" onclick="openArticle(3)">
-          <div class="sub-card-img"><div class="sub-card-img-placeholder"><span class="img-icon">🌅</span></div></div>
+          <div class="sub-card-img"><img src="/images/beach.jpg" alt="Pink sand beach with turquoise water and rock formations in Bermuda" loading="lazy"></div>
           <div class="sub-card-body">
             <span class="sub-card-cat">Tourism</span>
             <div class="sub-card-title">Loading...</div>
@@ -2306,7 +2298,7 @@ body {
         </div>
         <div class="news-grid" id="business-grid">
           <div class="article-card">
-            <div class="article-thumb"><div class="thumb-placeholder"><span class="thumb-emoji">💼</span></div></div>
+            <div class="article-thumb"><img src="/images/town.jpg" alt="Colorful buildings of Hamilton, Bermuda — business district" loading="lazy"></div>
             <div class="article-body">
               <div class="article-cat-badge cat-business" style="position:relative;top:auto;left:auto;display:inline-block;margin-bottom:8px">Business</div>
               <div class="article-title">Loading business news...</div>
@@ -2324,7 +2316,7 @@ body {
         </div>
         <div class="news-grid" id="tourism-grid">
           <div class="article-card">
-            <div class="article-thumb"><div class="thumb-placeholder"><span class="thumb-emoji">✈️</span></div></div>
+            <div class="article-thumb"><img src="/images/beach.jpg" alt="Bermuda pink sand beach with turquoise water" loading="lazy"></div>
             <div class="article-body">
               <div class="article-cat-badge cat-tourism" style="position:relative;top:auto;left:auto;display:inline-block;margin-bottom:8px">Tourism</div>
               <div class="article-title">Loading tourism news...</div>
@@ -2342,7 +2334,7 @@ body {
         </div>
         <div class="news-grid" id="sports-grid">
           <div class="article-card">
-            <div class="article-thumb"><div class="thumb-placeholder"><span class="thumb-emoji">🏏</span></div></div>
+            <div class="article-thumb"><img src="/images/cricket.jpg" alt="Cricketer batting during an outdoor match — Cup Match season in Bermuda" loading="lazy"></div>
             <div class="article-body">
               <div class="article-cat-badge cat-sports" style="position:relative;top:auto;left:auto;display:inline-block;margin-bottom:8px">Sports</div>
               <div class="article-title">Loading sports news...</div>
@@ -2359,15 +2351,15 @@ body {
           <span class="section-head-badge">View All →</span>
         </div>
         <div class="gov-grid" id="gov-grid">
-          <div class="gov-card">
+          <div class="gov-card" style="padding:18px">
             <div class="gov-card-title skeleton" style="height:18px;width:80%;margin-bottom:8px"></div>
             <div class="gov-card-meta skeleton" style="height:12px;width:50%"></div>
           </div>
-          <div class="gov-card">
+          <div class="gov-card" style="padding:18px">
             <div class="gov-card-title skeleton" style="height:18px;width:70%;margin-bottom:8px"></div>
             <div class="gov-card-meta skeleton" style="height:12px;width:40%"></div>
           </div>
-          <div class="gov-card">
+          <div class="gov-card" style="padding:18px">
             <div class="gov-card-title skeleton" style="height:18px;width:75%;margin-bottom:8px"></div>
             <div class="gov-card-meta skeleton" style="height:12px;width:45%"></div>
           </div>
@@ -2496,7 +2488,7 @@ body {
           <!-- Obituary listings -->
           <div class="obit-listings" id="obit-listings">
             <div class="obit-card">
-              <div class="obit-photo">👤</div>
+              <div class="obit-photo"><img src="/images/sunset.jpg" alt="Bermuda sunset with palm tree silhouette" loading="lazy"></div>
               <div>
                 <div class="obit-name">Submit the first memorial...</div>
                 <div class="obit-dates">Use the form to post an obituary notice</div>
@@ -2508,7 +2500,7 @@ body {
 
           <!-- Obituary submit form -->
           <div class="form-card">
-            <div class="form-card-head" style="background:linear-gradient(135deg,#2a2a2a,#4a4a4a)">
+            <div class="form-card-head" style="background:linear-gradient(rgba(20,20,20,0.78),rgba(42,42,42,0.72)),url('/images/sunset.jpg') center/cover no-repeat;">
               <div class="form-card-title">🕯️ Submit an Obituary</div>
               <div class="form-card-sub">Honor a life with dignity — published within 24 hours</div>
             </div>
@@ -2571,8 +2563,8 @@ body {
         </div>
 
         <!-- SIDEBAR AD -->
-        <div class="sidebar-ad" onclick="window.open('https://creatorempire.app','_blank')"> 
-          <div class="sidebar-ad-inner">
+        <div class="sidebar-ad" onclick="window.open('https://creatorempire.app','_blank')">
+          <div class="sidebar-ad-inner" style="background:linear-gradient(rgba(6,30,53,0.82),rgba(10,61,107,0.72)),url('/images/beach.jpg') center/cover no-repeat;">
             <div class="sidebar-ad-tag">SPONSORED</div>
             <div class="sidebar-ad-domain">creatorempire.app</div>
             <div class="sidebar-ad-desc">🎬 Create Viral Character Videos with AI</div>
@@ -2626,8 +2618,8 @@ body {
         </div>
 
         <!-- SECOND SIDEBAR AD -->
-        <div class="sidebar-ad" onclick="window.open('https://lexai.llc','_blank')"> 
-          <div class="sidebar-ad-inner">
+        <div class="sidebar-ad" onclick="window.open('https://lexai.llc','_blank')">
+          <div class="sidebar-ad-inner" style="background:linear-gradient(rgba(6,30,53,0.82),rgba(10,61,107,0.72)),url('/images/harbor-sunset.jpg') center/cover no-repeat;">
             <div class="sidebar-ad-tag">SPONSORED</div>
             <div class="sidebar-ad-domain">LexAI.llc</div>
             <div class="sidebar-ad-desc">⚖️ AI-Powered Legal Platform for Bermuda Businesses</div>
@@ -2728,6 +2720,9 @@ body {
     <div class="footer-copy">© 2026 BermudaObserver. All rights reserved. Built in Bermuda 🇧🇲</div>
     <div class="footer-powered">Powered by <span>AI</span> · Digital King Empire</div>
   </div>
+  <div style="max-width:1400px;margin:10px auto 0;color:rgba(255,255,255,0.28);font-size:10px;letter-spacing:0.3px;">
+    Photography: Brandon Morrison, Andrea Powell, Christy Rice, Lorien le Poer Trench, Life_As_Pixels — via <a href="https://www.pexels.com" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.4);text-decoration:none;">Pexels</a>
+  </div>
 </footer>
 
 <!-- ===== SCROLL TO TOP ===== -->
@@ -2737,7 +2732,7 @@ body {
 <div id="article-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);">
   <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;position:relative;">
     <button onclick="document.getElementById('article-modal').style.display='none'" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.1);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;z-index:2;">×</button>
-    <div id="modal-img" style="height:280px;background:linear-gradient(135deg,var(--ocean),var(--ocean-light));border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:center;font-size:64px;opacity:0.7;">🏝️</div>
+    <div id="modal-img" style="height:280px;background:url('/images/hero.jpg') center/cover no-repeat;border-radius:16px 16px 0 0;"></div>
     <div style="padding:28px;">
       <div id="modal-cat" style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ocean-light);margin-bottom:10px;">NEWS</div>
       <h2 id="modal-title" style="font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#1a1a1a;margin-bottom:14px;line-height:1.3;"></h2>
@@ -2917,14 +2912,22 @@ function getCatClass(cat) {
   return catColors[(cat || 'news').toLowerCase()] || 'cat-news';
 }
 
-const catEmojis = {
-  news: '📰', business: '💼', government: '🏛️',
-  sports: '🏆', tourism: '✈️', jobs: '💼',
-  classifieds: '📢', obituaries: '🕯️'
+// Real Bermuda photography — files in /images/ (credits in <head> comment + footer)
+const catImages = {
+  news:        ['coastline', 'harbor', 'reef'],
+  government:  ['cottages', 'town', 'harbor-sunset'],
+  business:    ['town', 'harbor-sunset', 'cottages'],
+  tourism:     ['beach', 'cruise', 'reef'],
+  sports:      ['cricket', 'boats', 'coastline'],
+  weather:     ['reef', 'coastline'],
+  jobs:        ['town', 'harbor-sunset'],
+  classifieds: ['harbor', 'cottages'],
+  obituaries:  ['sunset']
 };
 
-function getCatEmoji(cat) {
-  return catEmojis[(cat || 'news').toLowerCase()] || '📰';
+function getCatImage(cat, i) {
+  const list = catImages[(cat || 'news').toLowerCase()] || catImages.news;
+  return '/images/' + list[(i || 0) % list.length] + '.jpg';
 }
 
 const sources = ['Bernews', 'TNN BDA', 'Royal Gazette', 'BermudaObserver', 'The Island'];
@@ -3005,11 +3008,10 @@ function renderHero() {
   // Sub cards
   const sub = document.getElementById('hero-sub');
   const subArts = allArticles.slice(1, 4);
-  const emojiList = ['🌊', '🏄', '🌅', '🏝️', '⛵'];
   sub.innerHTML = subArts.map((a, i) => `
     <div class="sub-card" onclick="openArticle(${i+1})">
       <div class="sub-card-img">
-        <div class="sub-card-img-placeholder"><span class="img-icon">${getCatEmoji(a.category)}</span></div>
+        <img src="${getCatImage(a.category, i)}" alt="${(a.category || 'News')} — Bermuda" loading="lazy">
       </div>
       <div class="sub-card-body">
         <span class="sub-card-cat">${(a.category || 'News').toUpperCase()}</span>
@@ -3032,7 +3034,7 @@ function renderSectionGrid(gridId, category) {
   if (!grid) return;
   const arts = allArticles.filter(a => (a.category || '').toLowerCase().includes(category)).slice(0, 3);
   if (!arts.length) {
-    grid.innerHTML = `<div class="article-card"><div class="article-thumb"><div class="thumb-placeholder"><span class="thumb-emoji">${getCatEmoji(category)}</span></div></div><div class="article-body"><div class="article-title">No ${category} news available yet</div><div class="article-excerpt">Check back soon for the latest ${category} updates from across Bermuda.</div></div></div>`;
+    grid.innerHTML = `<div class="article-card"><div class="article-thumb"><img src="${getCatImage(category, 0)}" alt="${category} — Bermuda" loading="lazy"></div><div class="article-body"><div class="article-title">No ${category} news available yet</div><div class="article-excerpt">Check back soon for the latest ${category} updates from across Bermuda.</div></div></div>`;
     return;
   }
   grid.innerHTML = arts.map((a, i) => createArticleCard(a, allArticles.indexOf(a))).join('');
@@ -3042,10 +3044,13 @@ function renderGovSection() {
   const grid = document.getElementById('gov-grid');
   const arts = allArticles.filter(a => (a.category || '').toLowerCase().includes('gov')).slice(0, 6);
   const fallbackArts = arts.length ? arts : allArticles.slice(0, 6);
-  grid.innerHTML = fallbackArts.map(a => `
+  grid.innerHTML = fallbackArts.map((a, i) => `
     <div class="gov-card">
-      <div class="gov-card-title">${a.title}</div>
-      <div class="gov-card-meta">📅 ${timeAgo(a.published_at)} &nbsp;·&nbsp; ${getSource(a)}</div>
+      <div class="gov-card-img"><img src="${getCatImage(a.category, i)}" alt="${(a.category || 'Government')} — Bermuda" loading="lazy"></div>
+      <div class="gov-card-body">
+        <div class="gov-card-title">${a.title}</div>
+        <div class="gov-card-meta">📅 ${timeAgo(a.published_at)} &nbsp;·&nbsp; ${getSource(a)}</div>
+      </div>
     </div>
   `).join('');
 }
@@ -3074,13 +3079,10 @@ function renderTicker() {
 function createArticleCard(article, index) {
   const cat = (article.category || 'news').toLowerCase();
   const catClass = getCatClass(cat);
-  const emoji = getCatEmoji(cat);
   return `
     <div class="article-card reveal" onclick="openArticle(${index})">
       <div class="article-thumb">
-        <div class="thumb-placeholder">
-          <span class="thumb-emoji">${emoji}</span>
-        </div>
+        <img src="${getCatImage(cat, index)}" alt="${(article.category || 'News')} — Bermuda" loading="lazy">
         <span class="article-cat-badge ${catClass}">${(article.category || 'News').toUpperCase()}</span>
         <span class="source-badge">${getSource(article)}</span>
       </div>
@@ -3110,7 +3112,7 @@ function openArticle(index) {
   const link = document.getElementById('modal-link');
   link.href = article.url || '#';
   const img = document.getElementById('modal-img');
-  img.textContent = getCatEmoji(article.category);
+  img.style.backgroundImage = `url('${getCatImage(article.category, index)}')`;
   modal.style.display = 'flex';
 }
 
@@ -3141,7 +3143,7 @@ function liveSearch(query) {
   results.innerHTML = matches.map((a, i) => `
     <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.03)'" onmouseout="this.style.background=''"
       onclick="document.getElementById('search-modal').style.display='none';openArticle(${allArticles.indexOf(a)});">
-      <span style="font-size:24px;">${getCatEmoji(a.category)}</span>
+      <img class="search-thumb" src="${getCatImage(a.category, i)}" alt="" loading="lazy">
       <div>
         <div style="font-size:13px;font-weight:600;color:#1a1a1a;">${a.title}</div>
         <div style="font-size:11px;color:#999;margin-top:3px;">${(a.category||'News').toUpperCase()} · ${timeAgo(a.published_at)}</div>
@@ -3196,8 +3198,9 @@ function submitObituary() {
 
   const newObit = document.createElement('div');
   newObit.className = 'obit-card';
+  const initial = (name.trim().charAt(0) || 'M').toUpperCase();
   newObit.innerHTML = `
-    <div class="obit-photo">👤</div>
+    <div class="obit-photo"><div class="obit-photo-monogram">${initial}</div></div>
     <div>
       <div class="obit-name">🕯️ ${name}</div>
       <div class="obit-dates">${date ? 'Passed: ' + new Date(date).toLocaleDateString('en-BM', {year:'numeric',month:'long',day:'numeric'}) : 'Recently passed'}</div>
