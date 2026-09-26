@@ -872,6 +872,11 @@ body {
 .ad-inarticle { min-height: 120px; margin: 18px 0 4px; }
 .ad-footer-banner { min-height: 96px; max-width: 1400px; margin: 0 auto 36px; }
 
+/* Named placements — shown on the homepage AND every category page */
+.ad-premium-header { min-height: 110px; margin-top: 20px; }
+.ad-banner { min-height: 120px; margin: 36px 0 8px; }
+.ad-bottom { min-height: 110px; margin-top: 36px; }
+
 /* sponsored-story zone doubles as a news-grid card — needs its own height */
 .ad-zone[data-ad-slot="sponsored-story"] { min-height: 340px; }
 
@@ -939,6 +944,7 @@ body {
   text-align: center;
   padding: 12px;
   transition: all 0.25s;
+  text-decoration: none;
 }
 
 .ad-unsold:hover {
@@ -963,6 +969,9 @@ body {
   .ad-infeed { min-height: 90px; }
   .ad-rect { min-height: 200px; }
   .ad-creative-label { font-size: 13px; }
+  .ad-premium-header { min-height: 84px; margin-top: 14px; }
+  .ad-banner { min-height: 100px; margin: 24px 0 4px; }
+  .ad-bottom { min-height: 84px; margin-top: 24px; }
 }
 
 /* ============================================================
@@ -2469,6 +2478,11 @@ body {
   <div class="ad-zone ad-leaderboard-top" data-ad-slot="leaderboard"></div>
 </div>
 
+<!-- ===== AD ZONE: PREMIUM HEADER (homepage + every category page) ===== -->
+<div class="ad-slot-wrap" data-ad-keep="1">
+  <div class="ad-zone ad-premium-header" data-ad-slot="premium-header"></div>
+</div>
+
 <!-- ===== MAIN BODY ===== -->
 <main class="site-body">
 
@@ -2949,6 +2963,9 @@ body {
 
   </div><!-- end content-sidebar -->
 
+  <!-- ===== AD ZONE: FULL-WIDTH BANNER (homepage + every category page) ===== -->
+  <div class="ad-zone ad-banner" data-ad-slot="banner" data-ad-keep="1"></div>
+
 </main>
 
 <!-- ===== WORLD NEWS STRIP ===== -->
@@ -2985,6 +3002,11 @@ body {
       <div class="world-item-title">Caribbean nations unite on regional climate resilience framework ahead of 2026 hurricane season</div>
     </div>
   </div>
+</div>
+
+<!-- ===== AD ZONE: BOTTOM (homepage + every category page, just above footer) ===== -->
+<div class="ad-slot-wrap" data-ad-keep="1">
+  <div class="ad-zone ad-bottom" data-ad-slot="bottom"></div>
 </div>
 
 <!-- ===== FOOTER ===== -->
@@ -3856,10 +3878,10 @@ function hydrateAdSlots() {
         <span class="ad-creative-overlay"><span class="ad-creative-label">${sold.label || ''}</span></span>
       </a>`;
     } else if (!el.querySelector('.ad-unsold')) {
-      el.innerHTML = `<div class="ad-unsold" onclick="scrollToSection('classifieds-section')" role="button">
-        <span class="ad-unsold-title">Advertise Here — Reach Bermuda</span>
+      el.innerHTML = `<a class="ad-unsold" href="/classifieds" role="button">
+        <span class="ad-unsold-title">Advertise here — BermudaObserver</span>
         <span class="ad-unsold-sub">${slot.replace(/-/g, ' ')} slot · your brand to an island-wide audience</span>
-      </div>`;
+      </a>`;
     }
   });
 }
@@ -3904,7 +3926,7 @@ const ROUTES = {
 function normalizePath() {
   let p = (location.pathname || "/").toLowerCase();
   if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
-  if (p === "" || p === "/index.html" || p === "/index.htm") p = "/";
+  if (p === "" || p === "/index.html" || p === "/index.htm" || p === "/home") p = "/";
   return p;
 }
 
@@ -3937,12 +3959,15 @@ function applyRoute() {
   const body = document.querySelector(".site-body");
   if (!pageView || !body) return;
 
-  // Hide the homepage blocks; keep only the focused page view
+  // Hide the homepage blocks; keep only the focused page view.
+  // Elements marked data-ad-keep (the named ad placements:
+  // premium-header, banner, bottom) stay visible on every page.
   Array.prototype.forEach.call(body.children, el => {
-    if (el !== pageView) el.style.display = "none";
+    if (el !== pageView && !el.hasAttribute("data-ad-keep")) el.style.display = "none";
   });
-  const topAd = document.querySelector(".ad-slot-wrap");
-  if (topAd) topAd.style.display = "none";
+  document.querySelectorAll(".ad-slot-wrap").forEach(w => {
+    w.style.display = w.hasAttribute("data-ad-keep") ? "" : "none";
+  });
   const world = document.querySelector(".world-strip");
   if (world) world.style.display = "none";
 
