@@ -59,6 +59,8 @@ app.get('/api/news', (req,res) => {
   res.json(a);
 });
 app.get('/api/news/status', (req,res) => res.json(newsroom.getStatus()));
+// Bermuda obituaries, newest first; [] until the first poll ingests some — never errors.
+app.get('/api/obituaries', (req,res) => res.json(newsroom.getObituaries()));
 app.get('/api/health', (req,res) => res.json({status:'ok',service:'BermudaObserver'}));
 app.get('*', (req,res) => { const f = path.join(__dirname,'public','index.html'); require('fs').existsSync(f) ? res.sendFile(f) : res.json({status:'ok',service:'BermudaObserver',api:'/api/headlines'}); });
 app.listen(PORT, () => console.log(`🇧🇲 BermudaObserver :${PORT}`));

@@ -2116,6 +2116,189 @@ body {
 .text-center { text-align: center; }
 .mt-0 { margin-top: 0 !important; }
 
+/* ============================================================
+   HERO CAROUSEL — auto-rotating top stories
+   ============================================================ */
+.hero-carousel {
+  grid-column: 1 / 3;
+  position: relative;
+}
+
+.hero-slides {
+  position: relative;
+  min-height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(145deg, var(--ocean), var(--ocean-light));
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
+  transition: box-shadow 0.4s;
+}
+
+.hero-slides:hover {
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px var(--glow-color);
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateX(4%);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.hero-slide.active:hover .hero-img { transform: scale(1.03); }
+
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  padding: 0 0 4px;
+}
+
+.hero-arrow:hover {
+  background: var(--coral);
+  border-color: var(--coral);
+  box-shadow: 0 0 20px var(--glow-color);
+}
+
+.hero-prev { left: 16px; }
+.hero-next { right: 16px; }
+
+.hero-dots {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 8px 10px;
+  border-radius: 20px;
+}
+
+.hero-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s;
+}
+
+.hero-dot:hover { background: rgba(255,255,255,0.6); }
+
+.hero-dot.active {
+  background: var(--coral);
+  border-color: var(--coral);
+  transform: scale(1.3);
+  box-shadow: 0 0 10px rgba(230,57,70,0.8);
+}
+
+/* ============================================================
+   FOCUSED PAGE VIEW — /news /business /tourism /sports
+   /government /obituaries /jobs /classifieds
+   ============================================================ */
+#page-view { margin-top: 30px; }
+
+.page-head { margin-bottom: 24px; }
+
+.page-crumb {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.page-crumb a { color: var(--ocean-light); text-decoration: none; }
+.page-crumb a:hover { color: var(--coral); }
+.page-crumb-sep { margin: 0 8px; color: #ccc; }
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 4.5vw, 48px);
+  font-weight: 900;
+  color: var(--ocean);
+  letter-spacing: -0.5px;
+  text-shadow:
+    2px 2px 0 rgba(0,0,0,0.15),
+    4px 4px 0 rgba(0,0,0,0.08),
+    0 0 20px var(--glow-color);
+}
+
+.page-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.page-head-line {
+  height: 3px;
+  background: linear-gradient(90deg, var(--ocean-light), transparent);
+  border-radius: 2px;
+  margin-top: 16px;
+}
+
+#page-view > .category-section,
+#page-view > .obit-section { margin-top: 0; }
+
+/* The page header already names the section — hide the moved section's duplicate head */
+#page-view > .category-section > .section-head,
+#page-view > .obit-section > .section-head { display: none; }
+
+.obit-source {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #999;
+  letter-spacing: 0.5px;
+}
+
+.obit-source a {
+  color: var(--ocean-light);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.obit-source a:hover { color: var(--coral); }
+
+@media (max-width: 768px) {
+  .hero-carousel { grid-column: 1; }
+  .hero-slides { min-height: 280px; }
+  .hero-arrow { width: 36px; height: 36px; font-size: 18px; }
+}
+
 /* ===== SCROLL TO TOP ===== */
 #scroll-top {
   position: fixed;
@@ -2192,15 +2375,15 @@ body {
 <div class="sticky-nav" id="sticky-nav">
   <div class="sticky-logo">Bermuda<span style="color:var(--accent)">Observer</span></div>
   <nav class="nav-inner">
-    <a class="nav-link active" onclick="scrollTo(0,0)">Home</a>
-    <a class="nav-link" onclick="scrollToSection('news-grid-section')">News</a>
-    <a class="nav-link" onclick="scrollToSection('business-section')">Business</a>
-    <a class="nav-link" onclick="scrollToSection('tourism-section')">Tourism</a>
-    <a class="nav-link" onclick="scrollToSection('sports-section')">Sports</a>
-    <a class="nav-link" onclick="scrollToSection('gov-section')">Government</a>
-    <a class="nav-link" onclick="scrollToSection('classifieds-section')">Classifieds</a>
-    <a class="nav-link" onclick="scrollToSection('jobs-section')">Jobs</a>
-    <a class="nav-link" onclick="scrollToSection('obituaries-section')">Obituaries</a>
+    <a class="nav-link active" href="/">Home</a>
+    <a class="nav-link" href="/news">News</a>
+    <a class="nav-link" href="/business">Business</a>
+    <a class="nav-link" href="/tourism">Tourism</a>
+    <a class="nav-link" href="/sports">Sports</a>
+    <a class="nav-link" href="/government">Government</a>
+    <a class="nav-link" href="/classifieds">Classifieds</a>
+    <a class="nav-link" href="/jobs">Jobs</a>
+    <a class="nav-link" href="/obituaries">Obituaries</a>
   </nav>
 </div>
 
@@ -2269,15 +2452,15 @@ body {
 <!-- ===== MAIN NAV ===== -->
 <div class="main-nav">
   <nav class="nav-inner">
-    <a class="nav-link active" onclick="scrollTo(0,0)">Home</a>
-    <a class="nav-link" onclick="scrollToSection('news-grid-section')">News</a>
-    <a class="nav-link" onclick="scrollToSection('business-section')">Business</a>
-    <a class="nav-link" onclick="scrollToSection('tourism-section')">Tourism</a>
-    <a class="nav-link" onclick="scrollToSection('sports-section')">Sports</a>
-    <a class="nav-link" onclick="scrollToSection('gov-section')">Government</a>
-    <a class="nav-link" onclick="scrollToSection('classifieds-section')">Classifieds</a>
-    <a class="nav-link" onclick="scrollToSection('jobs-section')">Jobs</a>
-    <a class="nav-link" onclick="scrollToSection('obituaries-section')">Obituaries</a>
+    <a class="nav-link active" href="/">Home</a>
+    <a class="nav-link" href="/news">News</a>
+    <a class="nav-link" href="/business">Business</a>
+    <a class="nav-link" href="/tourism">Tourism</a>
+    <a class="nav-link" href="/sports">Sports</a>
+    <a class="nav-link" href="/government">Government</a>
+    <a class="nav-link" href="/classifieds">Classifieds</a>
+    <a class="nav-link" href="/jobs">Jobs</a>
+    <a class="nav-link" href="/obituaries">Obituaries</a>
   </nav>
 </div>
 
@@ -2289,23 +2472,41 @@ body {
 <!-- ===== MAIN BODY ===== -->
 <main class="site-body">
 
+  <!-- ===== FOCUSED PAGE VIEW (/news /business /tourism /sports /government /obituaries /jobs /classifieds) ===== -->
+  <section id="page-view" style="display:none;">
+    <div class="page-head">
+      <div class="page-crumb"><a href="/">⌂ Home</a><span class="page-crumb-sep">/</span><span id="page-crumb-current">Section</span></div>
+      <h1 class="page-title" id="page-title">Section</h1>
+      <div class="page-sub" id="page-count"></div>
+      <div class="page-head-line"></div>
+    </div>
+    <div class="news-grid page-grid" id="page-grid"></div>
+  </section>
+
   <!-- ===== HERO ===== -->
   <section class="hero-section reveal" id="hero-section">
     <div class="hero-main">
 
-      <!-- HERO CARD -->
-      <div class="hero-card" id="hero-card" onclick="openArticle(0)">
-        <img class="hero-img" src="/images/hero.jpg" alt="Aerial view of Bermuda's coastline at sunrise with colorful cottages along the water" fetchpriority="high">
-        <div class="hero-gradient"></div>
-        <div class="hero-content">
-          <div class="hero-badge" id="hero-badge">Featured Story</div>
-          <h1 class="hero-title" id="hero-title">Loading latest Bermuda news...</h1>
-          <p class="hero-excerpt" id="hero-excerpt">Stay tuned for the latest updates from the BermudaObserver AI-powered newsroom.</p>
-          <div class="hero-meta">
-            <span class="hero-source" id="hero-source">BermudaObserver</span>
-            <span class="hero-time" id="hero-time">Just now</span>
+      <!-- HERO CAROUSEL — auto-rotating top 5 stories -->
+      <div class="hero-carousel" id="hero-carousel">
+        <div class="hero-slides" id="hero-slides">
+          <div class="hero-slide active" onclick="openArticle(0)">
+            <img class="hero-img" src="/images/hero.jpg" alt="Aerial view of Bermuda's coastline at sunrise with colorful cottages along the water" fetchpriority="high">
+            <div class="hero-gradient"></div>
+            <div class="hero-content">
+              <div class="hero-badge" id="hero-badge">Featured Story</div>
+              <h1 class="hero-title" id="hero-title">Loading latest Bermuda news...</h1>
+              <p class="hero-excerpt" id="hero-excerpt">Stay tuned for the latest updates from the BermudaObserver AI-powered newsroom.</p>
+              <div class="hero-meta">
+                <span class="hero-source" id="hero-source">BermudaObserver</span>
+                <span class="hero-time" id="hero-time">Just now</span>
+              </div>
+            </div>
           </div>
         </div>
+        <button class="hero-arrow hero-prev" id="hero-prev" aria-label="Previous story">‹</button>
+        <button class="hero-arrow hero-next" id="hero-next" aria-label="Next story">›</button>
+        <div class="hero-dots" id="hero-dots"></div>
       </div>
 
       <!-- SUB CARDS -->
@@ -2373,7 +2574,7 @@ body {
         <div class="section-head reveal">
           <h2 class="section-head-title">Latest News</h2>
           <div class="section-head-line"></div>
-          <span class="section-head-badge">All Stories →</span>
+          <a class="section-head-badge" href="/news" style="text-decoration:none">All Stories →</a>
         </div>
         <div class="news-grid" id="news-grid">
           <!-- Skeleton loaders -->
@@ -2412,7 +2613,7 @@ body {
         <div class="section-head reveal">
           <h2 class="section-head-title">Business</h2>
           <div class="section-head-line"></div>
-          <span class="section-head-badge">More →</span>
+          <a class="section-head-badge" href="/business" style="text-decoration:none">More →</a>
         </div>
         <div class="news-grid" id="business-grid">
           <div class="article-card">
@@ -2430,7 +2631,7 @@ body {
         <div class="section-head reveal">
           <h2 class="section-head-title">Tourism & Travel</h2>
           <div class="section-head-line"></div>
-          <span class="section-head-badge">More →</span>
+          <a class="section-head-badge" href="/tourism" style="text-decoration:none">More →</a>
         </div>
         <div class="news-grid" id="tourism-grid">
           <div class="article-card">
@@ -2451,7 +2652,7 @@ body {
         <div class="section-head reveal">
           <h2 class="section-head-title">Sports</h2>
           <div class="section-head-line"></div>
-          <span class="section-head-badge">More →</span>
+          <a class="section-head-badge" href="/sports" style="text-decoration:none">More →</a>
         </div>
         <div class="news-grid" id="sports-grid">
           <div class="article-card">
@@ -2469,7 +2670,7 @@ body {
         <div class="section-head reveal">
           <h2 class="section-head-title">Government Announcements</h2>
           <div class="section-head-line"></div>
-          <span class="section-head-badge">View All →</span>
+          <a class="section-head-badge" href="/government" style="text-decoration:none">View All →</a>
         </div>
         <div class="gov-grid" id="gov-grid">
           <div class="gov-card" style="padding:18px">
@@ -2614,7 +2815,7 @@ body {
         <div class="obit-grid">
           <!-- Obituary listings -->
           <div class="obit-listings" id="obit-listings">
-            <div class="obit-card">
+            <div class="obit-card" id="obit-placeholder">
               <div class="obit-photo"><img src="/images/sunset.jpg" alt="Bermuda sunset with palm tree silhouette" loading="lazy"></div>
               <div>
                 <div class="obit-name">Submit the first memorial...</div>
@@ -2806,19 +3007,19 @@ body {
     <div>
       <div class="footer-col-title">Sections</div>
       <ul class="footer-links">
-        <li><a onclick="scrollToSection('news-grid-section')">Latest News</a></li>
-        <li><a onclick="scrollToSection('business-section')">Business</a></li>
-        <li><a onclick="scrollToSection('tourism-section')">Tourism</a></li>
-        <li><a onclick="scrollToSection('sports-section')">Sports</a></li>
-        <li><a onclick="scrollToSection('gov-section')">Government</a></li>
+        <li><a href="/news">Latest News</a></li>
+        <li><a href="/business">Business</a></li>
+        <li><a href="/tourism">Tourism</a></li>
+        <li><a href="/sports">Sports</a></li>
+        <li><a href="/government">Government</a></li>
       </ul>
     </div>
     <div>
       <div class="footer-col-title">Community</div>
       <ul class="footer-links">
-        <li><a onclick="scrollToSection('jobs-section')">Jobs</a></li>
-        <li><a onclick="scrollToSection('classifieds-section')">Classifieds</a></li>
-        <li><a onclick="scrollToSection('obituaries-section')">Obituaries</a></li>
+        <li><a href="/jobs">Jobs</a></li>
+        <li><a href="/classifieds">Classifieds</a></li>
+        <li><a href="/obituaries">Obituaries</a></li>
         <li><a href="mailto:news@bermudaobserver.bm">Submit a Story</a></li>
         <li><a href="mailto:ads@bermudaobserver.bm">Advertise</a></li>
       </ul>
@@ -3118,33 +3319,122 @@ function renderAll() {
   renderGovSection();
   renderTopStories();
   renderTicker();
+  renderPageGrid();
   document.getElementById('live-article-count').textContent = allArticles.length;
 }
 
-function renderHero() {
-  const art = allArticles[0];
-  if (!art) return;
-  document.getElementById('hero-title').textContent = art.title || 'Latest Bermuda News';
-  document.getElementById('hero-excerpt').textContent = art.excerpt || art.summary || '' ;
-  document.getElementById('hero-source').textContent = getSource(art);
-  document.getElementById('hero-time').textContent = timeAgo(art.published_at);
-  document.getElementById('hero-badge').textContent = (art.category || 'NEWS').toUpperCase();
+// ============================================================
+// HERO CAROUSEL — auto-rotating top 5 stories
+// ============================================================
+let heroStories = [];
+let heroIndex = 0;
+let heroTimer = null;
+const HERO_INTERVAL_MS = 6000;
 
-  // Sub cards
-  const sub = document.getElementById('hero-sub');
-  const subArts = allArticles.slice(1, 4);
+function renderHero() {
+  heroStories = allArticles.slice(0, 5);
+  if (!heroStories.length) return;
+  const slidesEl = document.getElementById("hero-slides");
+  const dotsEl = document.getElementById("hero-dots");
+  const prevBtn = document.getElementById("hero-prev");
+  const nextBtn = document.getElementById("hero-next");
+  if (!slidesEl || !dotsEl) return;
+
+  slidesEl.innerHTML = heroStories.map((a, i) => `
+    <div class="hero-slide${i === 0 ? " active" : ""}" data-hero-index="${i}">
+      <img class="hero-img" src="${getArtImg(a, i)}" alt="${(a.category || "News")} — Bermuda"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>
+      <div class="hero-gradient"></div>
+      <div class="hero-content">
+        <div class="hero-badge">${(a.category || "NEWS").toUpperCase()}</div>
+        <h1 class="hero-title">${a.title || "Latest Bermuda News"}</h1>
+        <p class="hero-excerpt">${a.excerpt || a.summary || ""}</p>
+        <div class="hero-meta">
+          <span class="hero-source">${getSource(a)}</span>
+          <span class="hero-time">${timeAgo(a.published_at)}</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  slidesEl.querySelectorAll(".hero-slide").forEach((slide, i) => {
+    slide.addEventListener("click", () => openArticle(allArticles.indexOf(heroStories[i])));
+  });
+
+  dotsEl.innerHTML = heroStories.map((a, i) =>
+    `<button class="hero-dot${i === 0 ? " active" : ""}" data-hero-dot="${i}" aria-label="Go to story ${i + 1}"></button>`
+  ).join("");
+  dotsEl.querySelectorAll(".hero-dot").forEach((dot, i) => {
+    dot.addEventListener("click", () => { showHeroSlide(i); startHeroAuto(); });
+  });
+
+  const multi = heroStories.length > 1;
+  if (prevBtn) prevBtn.style.display = multi ? "" : "none";
+  if (nextBtn) nextBtn.style.display = multi ? "" : "none";
+  dotsEl.style.display = multi ? "" : "none";
+
+  heroIndex = 0;
+  renderHeroSub();
+  startHeroAuto();
+}
+
+function showHeroSlide(n) {
+  const slides = document.querySelectorAll("#hero-slides .hero-slide");
+  const dots = document.querySelectorAll("#hero-dots .hero-dot");
+  if (!slides.length) return;
+  heroIndex = ((n % slides.length) + slides.length) % slides.length;
+  slides.forEach((s, i) => s.classList.toggle("active", i === heroIndex));
+  dots.forEach((d, i) => d.classList.toggle("active", i === heroIndex));
+  renderHeroSub();
+}
+
+function startHeroAuto() {
+  stopHeroAuto();
+  if (heroStories.length < 2) return;
+  heroTimer = setInterval(() => showHeroSlide(heroIndex + 1), HERO_INTERVAL_MS);
+}
+
+function stopHeroAuto() {
+  if (heroTimer) { clearInterval(heroTimer); heroTimer = null; }
+}
+
+// Sub-cards always show stories OTHER than the visible hero slide — never a duplicate
+function renderHeroSub() {
+  const sub = document.getElementById("hero-sub");
+  if (!sub) return;
+  const current = heroStories[heroIndex];
+  let subArts = heroStories.filter(a => a !== current);
+  if (subArts.length < 3) {
+    allArticles.forEach(a => {
+      if (subArts.length < 3 && a !== current && subArts.indexOf(a) === -1) subArts.push(a);
+    });
+  }
+  subArts = subArts.slice(0, 3);
+  if (!subArts.length) return;
   sub.innerHTML = subArts.map((a, i) => `
-    <div class="sub-card" onclick="openArticle(${i+1})">
+    <div class="sub-card" onclick="openArticle(${allArticles.indexOf(a)})">
       <div class="sub-card-img">
-        <img src="${getArtImg(a, i)}" alt="${(a.category || 'News')} — Bermuda" loading="lazy">
+        <img src="${getArtImg(a, i)}" alt="${(a.category || "News")} — Bermuda" loading="lazy">
       </div>
       <div class="sub-card-body">
-        <span class="sub-card-cat">${(a.category || 'News').toUpperCase()}</span>
+        <span class="sub-card-cat">${(a.category || "News").toUpperCase()}</span>
         <div class="sub-card-title">${a.title}</div>
         <div class="sub-card-meta"><span>${getSource(a)}</span><span>${timeAgo(a.published_at)}</span></div>
       </div>
     </div>
-  `).join('');
+  `).join("");
+}
+
+function setupHeroCarousel() {
+  const carousel = document.getElementById("hero-carousel");
+  if (!carousel) return;
+  carousel.addEventListener("mouseenter", stopHeroAuto);
+  carousel.addEventListener("mouseleave", startHeroAuto);
+  carousel.addEventListener("touchstart", stopHeroAuto, { passive: true });
+  carousel.addEventListener("touchend", startHeroAuto);
+  const prevBtn = document.getElementById("hero-prev");
+  const nextBtn = document.getElementById("hero-next");
+  if (prevBtn) prevBtn.addEventListener("click", () => { showHeroSlide(heroIndex - 1); startHeroAuto(); });
+  if (nextBtn) nextBtn.addEventListener("click", () => { showHeroSlide(heroIndex + 1); startHeroAuto(); });
 }
 
 function renderNewsGrid() {
@@ -3594,12 +3884,199 @@ async function injectSponsoredStory() {
 }
 
 // ============================================================
+// PATH-BASED ROUTING — /news /business /tourism /sports
+// /government /obituaries /jobs /classifieds
+// The server serves this file for every non-/api GET path, so
+// each path below gets its own focused full-page view.
+// Unknown paths fall back to the homepage.
+// ============================================================
+const ROUTES = {
+  news:        { title: "Latest News", cat: null },
+  business:    { title: "Business", cat: "business" },
+  tourism:     { title: "Tourism & Travel", cat: "tourism" },
+  sports:      { title: "Sports", cat: "sports" },
+  government:  { title: "Government Announcements", cat: "gov" },
+  obituaries:  { title: "Obituaries & In Memoriam", section: "obituaries-section", sub: "In loving memory — community memorial notices" },
+  jobs:        { title: "Employment Opportunities", section: "jobs-section", sub: "Post a role or browse recent listings" },
+  classifieds: { title: "Classifieds", section: "classifieds-section", sub: "Buy, sell and trade across Bermuda" }
+};
+
+function normalizePath() {
+  let p = (location.pathname || "/").toLowerCase();
+  if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+  if (p === "" || p === "/index.html" || p === "/index.htm") p = "/";
+  return p;
+}
+
+function getRoute() {
+  const p = normalizePath();
+  if (p === "/") return "home";
+  const key = p.replace(/^\/+/, "");
+  return ROUTES[key] ? key : "home";
+}
+
+const currentRoute = getRoute();
+
+function markActiveNav() {
+  let p = normalizePath();
+  if (p !== "/" && !ROUTES[p.replace(/^\/+/, "")]) p = "/";
+  document.querySelectorAll(".nav-link").forEach(link => {
+    let href = (link.getAttribute("href") || "/").toLowerCase();
+    if (href.length > 1 && href.endsWith("/")) href = href.slice(0, -1);
+    link.classList.toggle("active", href === p);
+  });
+}
+
+function applyRoute() {
+  markActiveNav();
+  if (currentRoute === "home") return;
+  const cfg = ROUTES[currentRoute];
+  document.title = cfg.title + " — BermudaObserver";
+
+  const pageView = document.getElementById("page-view");
+  const body = document.querySelector(".site-body");
+  if (!pageView || !body) return;
+
+  // Hide the homepage blocks; keep only the focused page view
+  Array.prototype.forEach.call(body.children, el => {
+    if (el !== pageView) el.style.display = "none";
+  });
+  const topAd = document.querySelector(".ad-slot-wrap");
+  if (topAd) topAd.style.display = "none";
+  const world = document.querySelector(".world-strip");
+  if (world) world.style.display = "none";
+
+  document.getElementById("page-title").textContent = cfg.title;
+  document.getElementById("page-crumb-current").textContent = cfg.title;
+
+  if (cfg.section) {
+    // Move the real section (forms and all, untouched) into the focused page
+    const sec = document.getElementById(cfg.section);
+    if (sec) pageView.appendChild(sec);
+    const grid = document.getElementById("page-grid");
+    if (grid) grid.style.display = "none";
+    const countEl = document.getElementById("page-count");
+    if (countEl) countEl.textContent = cfg.sub || "";
+  }
+  pageView.style.display = "block";
+}
+
+function renderPageGrid() {
+  if (currentRoute === "home") return;
+  const cfg = ROUTES[currentRoute];
+  if (!cfg || cfg.section) return;
+  const grid = document.getElementById("page-grid");
+  if (!grid) return;
+  const arts = cfg.cat
+    ? allArticles.filter(a => (a.category || "").toLowerCase().indexOf(cfg.cat) !== -1)
+    : allArticles.slice();
+  const countEl = document.getElementById("page-count");
+  if (countEl) countEl.textContent = arts.length + (arts.length === 1 ? " story" : " stories");
+  if (!arts.length) {
+    grid.innerHTML = `<div class="article-card"><div class="article-thumb"><img src="${getCatImage(cfg.cat || "news", 0)}" alt="${cfg.title} — Bermuda" loading="lazy"></div><div class="article-body"><div class="article-title">No ${cfg.title.toLowerCase()} stories available yet</div><div class="article-excerpt">Check back soon for the latest updates from across Bermuda.</div></div></div>`;
+    return;
+  }
+  grid.innerHTML = arts.map(a => createArticleCard(a, allArticles.indexOf(a))).join("");
+  observeReveal();
+}
+
+// ============================================================
+// OBITUARIES — /api/obituaries (JSON array, newest first)
+// ============================================================
+async function fetchObituaries() {
+  let obits = [];
+  try {
+    const res = await fetch("/api/obituaries");
+    if (res.ok) {
+      const data = await res.json();
+      obits = Array.isArray(data) ? data : (data.obituaries || data.data || []);
+    }
+  } catch (e) {
+    obits = [];
+  }
+  renderObituaries(obits);
+}
+
+function renderObituaries(obits) {
+  const listEl = document.getElementById("obit-dynamic-list");
+  const placeholder = document.getElementById("obit-placeholder");
+  if (!listEl) return;
+  listEl.innerHTML = "";
+  if (!Array.isArray(obits) || !obits.length) {
+    // Empty feed — keep the "Submit the first memorial" placeholder
+    if (placeholder) placeholder.style.display = "";
+    return;
+  }
+  if (placeholder) placeholder.style.display = "none";
+  obits.forEach(o => {
+    if (!o) return;
+    const card = document.createElement("div");
+    card.className = "obit-card";
+
+    const photo = document.createElement("div");
+    photo.className = "obit-photo";
+    const mono = document.createElement("div");
+    mono.className = "obit-photo-monogram";
+    mono.textContent = (String(o.name || "M").trim().charAt(0) || "M").toUpperCase();
+    photo.appendChild(mono);
+
+    const body = document.createElement("div");
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "obit-name";
+    nameEl.textContent = "🕯️ " + (o.name || "In Memoriam");
+    body.appendChild(nameEl);
+
+    const dateBits = [];
+    if (o.date) {
+      const d = new Date(o.date);
+      if (!isNaN(d.getTime())) dateBits.push("Passed: " + d.toLocaleDateString("en-BM", { year: "numeric", month: "long", day: "numeric" }));
+    }
+    if (o.age !== null && o.age !== undefined && o.age !== "") dateBits.push("Aged " + o.age);
+    const datesEl = document.createElement("div");
+    datesEl.className = "obit-dates";
+    datesEl.textContent = dateBits.join(" · ") || "In loving memory";
+    body.appendChild(datesEl);
+
+    if (o.message) {
+      const msg = document.createElement("div");
+      msg.className = "obit-message";
+      msg.textContent = o.message;
+      body.appendChild(msg);
+    }
+
+    if (o.source || o.url) {
+      const src = document.createElement("div");
+      src.className = "obit-source";
+      if (o.url) {
+        const a = document.createElement("a");
+        a.href = o.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = (o.source || "Source") + " ↗";
+        src.appendChild(a);
+      } else {
+        src.textContent = o.source;
+      }
+      body.appendChild(src);
+    }
+
+    card.appendChild(photo);
+    card.appendChild(body);
+    listEl.appendChild(card);
+  });
+}
+
+// ============================================================
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   applyHolidayTheme();
   updateHeaderDate();
+  applyRoute();
+  setupHeroCarousel();
   fetchNews();
+  fetchObituaries();
   initAds();
   observeReveal();
   setupStickyNav();
