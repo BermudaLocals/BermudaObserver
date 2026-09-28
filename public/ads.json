@@ -1,5 +1,17 @@
 [
   {
+    "slot": "premium-header",
+    "imageUrl": "/images/harbor.jpg",
+    "linkUrl": "https://ringbook-production.up.railway.app",
+    "label": "RingBook — AI Receptionist built in Bermuda · Answers every call 24/7 · Try the live demo free"
+  },
+  {
+    "slot": "banner",
+    "imageUrl": "/images/harbor-sunset.jpg",
+    "linkUrl": "https://ringbook-production.up.railway.app",
+    "label": "Your business misses calls. RingBook doesn't. Bermuda-built AI receptionist — free live demo"
+  },
+  {
     "slot": "sidebar-1",
     "imageUrl": "/images/beach.jpg",
     "linkUrl": "https://creatorempire.app",
@@ -10,5 +22,17 @@
     "imageUrl": "/images/harbor-sunset.jpg",
     "linkUrl": "https://lexai.llc",
     "label": "LexAI.llc — AI-Powered Legal Platform for Bermuda"
+  },
+  {
+    "slot": "sidebar-3",
+    "imageUrl": "/images/town.jpg",
+    "linkUrl": "https://ringbook-production.up.railway.app",
+    "label": "RingBook — Never miss a customer call again · Free demo"
+  },
+  {
+    "slot": "bottom",
+    "imageUrl": "/images/coastline.jpg",
+    "linkUrl": "https://ringbook-production.up.railway.app",
+    "label": "Built in Bermuda: RingBook AI Receptionist — try it on your own business's toughest calls"
   }
 ]
