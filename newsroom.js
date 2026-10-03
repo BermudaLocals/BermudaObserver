@@ -20,6 +20,7 @@ const ARTICLES_FILE = path.join(DATA_DIR, 'articles.json');
 const SEEN_FILE = path.join(DATA_DIR, 'seen.json');
 const OBITS_FILE = path.join(DATA_DIR, 'obituaries.json');
 const GEN_DIR = path.join(__dirname, 'public', 'images', 'gen');
+const SEED_DIR = path.join(__dirname, 'data-seed');
 
 const POLL_MS = 30 * 60 * 1000;          // every 30 minutes
 const MAX_ARTICLES = 120;                // rolling store cap
@@ -164,6 +165,50 @@ function saveStore() {
     const cap = (obj, n) => Object.fromEntries(Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, n));
     fs.writeFileSync(SEEN_FILE, JSON.stringify({ urls: cap(seen.urls, 5000), titles: cap(seen.titles, 5000) }));
   } catch (e) { console.warn('[newsroom] store save failed:', e.message); }
+}
+
+// data/ is gitignored, so a fresh deploy (Railway) starts empty. data-seed/ IS
+// committed: merge any seeded articles/obits not already in the store, and mark
+// them seen so the next poll doesn't re-ingest duplicates of what we restored.
+function mergeSeed() {
+  try {
+    const seedArticlesFile = path.join(SEED_DIR, 'articles.json');
+    if (fs.existsSync(seedArticlesFile)) {
+      const seedArticles = JSON.parse(fs.readFileSync(seedArticlesFile, 'utf8'));
+      if (Array.isArray(seedArticles) && seedArticles.length) {
+        const have = new Set(articles.map(a => a && a.id));
+        let added = 0;
+        for (const a of seedArticles) {
+          if (!a || !a.id || have.has(a.id)) continue;
+          articles.push(a); have.add(a.id); added++;
+          if (a.url) seen.urls[canonUrl(a.url)] = seen.urls[canonUrl(a.url)] || Date.now();
+          if (a.title) seen.titles[titleKey(a.title)] = seen.titles[titleKey(a.title)] || Date.now();
+        }
+        if (added) {
+          articles.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+          articles = articles.slice(0, MAX_ARTICLES);
+        }
+        console.log(`[newsroom] seed merge: ${added} articles restored (${articles.length} total)`);
+      }
+    }
+    const seedObitsFile = path.join(SEED_DIR, 'obituaries.json');
+    if (fs.existsSync(seedObitsFile)) {
+      const seedObits = JSON.parse(fs.readFileSync(seedObitsFile, 'utf8'));
+      if (Array.isArray(seedObits) && seedObits.length) {
+        let added = 0;
+        for (const o of seedObits) {
+          const key = ((o && o.name) || '').toLowerCase().replace(/[^a-z]/g, '');
+          if (!key || obitKeys.has(key)) continue;
+          obitKeys.add(key); obituaries.push(o); added++;
+        }
+        if (added) {
+          obituaries.sort((a, b) => new Date(b.date) - new Date(a.date));
+          obituaries = obituaries.slice(0, MAX_OBITS);
+        }
+        console.log(`[newsroom] seed merge: ${added} obituaries restored (${obituaries.length} total)`);
+      }
+    }
+  } catch (e) { console.warn('[newsroom] seed merge failed (continuing):', e.message); }
 }
 
 // ------------------------------------------------------------
@@ -538,6 +583,8 @@ async function run() {
 
 function start() {
   loadStore();
+  mergeSeed();
+  saveStore();
   console.log(`[newsroom] starting — ${articles.length} stored articles, ${obituaries.length} obituaries, polling every ${POLL_MS / 60000}min`);
   setTimeout(run, 3000);              // run once at boot (don't block listen)
   setInterval(run, POLL_MS);          // then on schedule
