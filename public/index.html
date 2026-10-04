@@ -3072,13 +3072,14 @@ body {
 <!-- ===== ARTICLE MODAL ===== -->
 <div id="article-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);">
   <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;position:relative;">
-    <button onclick="document.getElementById('article-modal').style.display='none'" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.1);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;z-index:2;">×</button>
+    <button onclick="closeArticleModal()" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.1);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;z-index:2;">×</button>
     <div id="modal-img" style="height:280px;background:url('/images/hero.jpg') center/cover no-repeat;border-radius:16px 16px 0 0;"></div>
     <div style="padding:28px;">
       <div id="modal-cat" style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ocean-light);margin-bottom:10px;">NEWS</div>
       <h2 id="modal-title" style="font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#1a1a1a;margin-bottom:14px;line-height:1.3;"></h2>
       <div id="modal-meta" style="font-size:12px;color:#999;margin-bottom:20px;"></div>
       <div id="modal-attrib" style="display:none;font-size:11px;color:#999;margin:-12px 0 16px;"></div>
+      <div id="modal-video" style="display:none;"></div>
       <p id="modal-body" style="font-size:15px;color:#444;line-height:1.7;white-space:pre-line;"></p>
       <div class="ad-zone ad-inarticle" data-ad-slot="in-article"></div>
       <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.08);">
@@ -3567,13 +3568,28 @@ function openArticle(index) {
   }
   const link = document.getElementById('modal-link');
   link.href = article.url || '#';
+  const vidWrap = document.getElementById('modal-video');
+  if (article.video) {
+    vidWrap.innerHTML = '<div style="position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;margin-bottom:18px;background:#000;">' +
+      '<iframe src="' + article.video + '" title="Video report" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>';
+    vidWrap.style.display = 'block';
+  } else {
+    vidWrap.innerHTML = '';
+    vidWrap.style.display = 'none';
+  }
   const img = document.getElementById('modal-img');
   img.style.backgroundImage = `url('${getArtImg(article, index)}')`;
   modal.style.display = 'flex';
 }
 
+function closeArticleModal() {
+  document.getElementById('article-modal').style.display = 'none';
+  const vidWrap = document.getElementById('modal-video');
+  if (vidWrap) { vidWrap.innerHTML = ''; vidWrap.style.display = 'none'; } // stop iframe playback
+}
+
 document.getElementById('article-modal').addEventListener('click', function(e) {
-  if (e.target === this) this.style.display = 'none';
+  if (e.target === this) closeArticleModal();
 });
 
 document.getElementById('search-modal').addEventListener('click', function(e) {
