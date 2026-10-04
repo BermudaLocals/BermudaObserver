@@ -3,9 +3,49 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const newsroom = require('./newsroom');
+const ssr = require('./ssr');
 const app = express();
 const PORT = process.env.PORT || 3025;
 app.use(cors()); app.use(express.json());
+
+// ── SSR SEO ROUTES (before static + catch-all) ──
+// Canonical authoritative hub for the C-GRJP story. ONE URL, updated in place.
+const CGRJP_HUB = '/c-grjp-missing-air-ambulance-bermuda-boston';
+function findCGRJP() {
+  const arts = newsroom.getArticles();
+  return arts.find(a => a && a.id === 'ca7a9c9f9763')
+      || arts.find(a => a && /c-grjp|air ambulance/i.test((a.title || '') + (a.body || '')));
+}
+app.get([CGRJP_HUB, CGRJP_HUB + '/'], (req, res) => {
+  const a = findCGRJP();
+  if (!a) return res.redirect('/');
+  res.send(ssr.renderArticle(a, newsroom.getArticles(), {
+    canonical: ssr.SITE + CGRJP_HUB + '/',
+    seoTitle: 'C-GRJP Missing Air Ambulance Update: Gulfstream G100 Search Off Nantucket | Bermuda Observer',
+    h1: 'C-GRJP Missing Air Ambulance: Latest Search Updates'
+  }));
+});
+// SSR article pages for every story — Google-indexable, shareable URLs.
+app.get('/article/:id/:slug?', (req, res) => {
+  const a = newsroom.getArticles().find(x => x && x.id === req.params.id);
+  if (!a) return res.redirect('/');
+  // C-GRJP-family stories all canonicalise to the single hub URL.
+  if (/c-grjp|air ambulance|gulfstream g100/i.test((a.title || '') + (a.body || ''))) {
+    return res.redirect(301, CGRJP_HUB + '/');
+  }
+  res.send(ssr.renderArticle(a, newsroom.getArticles()));
+});
+// Trust pages (E-E-A-T).
+app.get('/about', (req, res) => res.send(ssr.renderAbout()));
+app.get('/contact', (req, res) => res.send(ssr.renderContact()));
+app.get('/editorial-standards', (req, res) => res.send(ssr.renderEditorial()));
+app.get('/corrections', (req, res) => res.send(ssr.renderCorrections()));
+// Real XML sitemap.
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml');
+  res.send(ssr.renderSitemap(newsroom.getArticles(), ssr.SITE + CGRJP_HUB + '/'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 const HEADLINES = [
   {
