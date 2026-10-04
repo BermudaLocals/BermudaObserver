@@ -110,12 +110,12 @@ const THEMES = [
 
 // Local photo pool (files live in public/images — see credits in index.html)
 const LOCAL_POOL = {
-  news: ['coastline', 'harbor', 'reef'],
-  government: ['cottages', 'town', 'harbor-sunset'],
-  business: ['town', 'harbor-sunset', 'cottages'],
-  tourism: ['beach', 'cruise', 'reef'],
-  sports: ['cricket', 'boats', 'coastline'],
-  weather: ['reef', 'coastline'],
+  news: ['coastline', 'harbor', 'reef', 'bermuda-aerial-seascape.png', 'bermuda-coastal-panorama.png'],
+  government: ['cottages', 'town', 'harbor-sunset', 'bermuda-turquoise-harbor-panorama.png'],
+  business: ['town', 'harbor-sunset', 'cottages', 'bermuda-turquoise-island-panorama.png'],
+  tourism: ['beach', 'cruise', 'reef', 'bermuda-turquoise-island-panorama.png', 'bermuda-turquoise-harbor-panorama.png', 'bermuda-aerial-seascape.png', 'bermuda-coastal-panorama.png'],
+  sports: ['cricket', 'boats', 'coastline', 'bermuda-aerial-seascape.png'],
+  weather: ['reef', 'coastline', 'bermuda-coastal-panorama.png'],
   jobs: ['town', 'harbor-sunset'],
   classifieds: ['harbor', 'cottages'],
   obituaries: ['sunset']
@@ -124,7 +124,11 @@ const LOCAL_CREDIT = {
   beach: 'Andrea Powell / Pexels',
   town: 'Christy Rice / Pexels',
   cricket: 'Lorien le Poer Trench / Pexels',
-  sunset: 'Life_As_Pixels / Pexels'
+  sunset: 'Life_As_Pixels / Pexels',
+  'bermuda-aerial-seascape.png': 'Bermuda Observer',
+  'bermuda-coastal-panorama.png': 'Bermuda Observer',
+  'bermuda-turquoise-island-panorama.png': 'Bermuda Observer',
+  'bermuda-turquoise-harbor-panorama.png': 'Bermuda Observer'
 };
 const POOL_DEFAULT_CREDIT = 'Brandon Morrison / Pexels';
 
@@ -242,7 +246,8 @@ function classify(text) {
 const detectTheme = text => THEMES.find(t => t.re.test(' ' + (text || '') + ' '));
 
 function localImage(name) {
-  return { url: '/images/' + name + '.jpg', credit: LOCAL_CREDIT[name] || POOL_DEFAULT_CREDIT };
+  const file = /\.png$/i.test(name) ? name : name + '.jpg';
+  return { url: '/images/' + file, credit: LOCAL_CREDIT[name] || POOL_DEFAULT_CREDIT };
 }
 
 function pickImage(category, text) {
