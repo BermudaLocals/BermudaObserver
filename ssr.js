@@ -58,10 +58,13 @@ const IMAGE_SEO = {
     'Breaking news: debris confirmed in C-GRJP search — investigators work to identify wreckage linked to the missing Bermuda to Boston air ambulance',
   '/images/c-grjp-breaking-news-debris-found.png':
     'Breaking news: debris found, search continues for C-GRJP — recovery teams examine possible wreckage from the missing Gulfstream G100 air ambulance',
+  '/images/c-grjp-bermuda-search-operation.png':
+    'Breaking news: Bermuda search operation for C-GRJP — the multi-agency effort for the air ambulance carrying Bermudians Marilyn Lavonne Bean and Sergio Wayne Lottimore',
 };
 
 // C-GRJP inline graphic placement — each graphic embedded at its matching section.
 const CGRJP_PLACEMENT = [
+  { kw: /police identify|marilyn lavonne bean|sergio wayne lottimore/i, src: '/images/c-grjp-bermuda-search-operation.png', cap: 'Bermuda Police have identified the two Bermudians aboard C-GRJP as Marilyn Lavonne Bean, 66, and her son Sergio Wayne Lottimore, 41. A BPS Family Liaison Officer is assisting the family.' },
   { kw: /15-minute hamilton flight/i, src: '/images/c-grjp-15-minute-flight-electrical-trouble.png', cap: 'The 15-minute flight out of Hamilton — tracking data shows a climb, then silence. Investigators are examining a possible electrical emergency.' },
   { kw: /15-minute hamilton flight/i, src: '/images/c-grjp-hamilton-flight-path-emergency.png', cap: 'C-GRJP\'s flight path out of Hamilton, Bermuda on October 1, with the reported electrical emergency window highlighted.' },
   { kw: /descended rapidly|rapid descent|24,000 feet/i, src: '/images/c-grjp-flight-data-raises-questions.png', cap: 'Flight-tracking records show C-GRJP descended rapidly from approximately 24,000 feet — data that raises questions about the aircraft\'s final minutes.' },

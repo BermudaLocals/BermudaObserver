@@ -21,8 +21,8 @@ app.get([CGRJP_HUB, CGRJP_HUB + '/'], (req, res) => {
   if (!a) return res.redirect('/');
   res.send(ssr.renderArticle(a, newsroom.getArticles(), {
     canonical: ssr.SITE + CGRJP_HUB + '/',
-    seoTitle: 'C-GRJP: Coast Guard Suspends Search After Debris Field Found Off Nantucket | Bermuda Observer',
-    h1: 'C-GRJP Air Ambulance: Search Suspended, Debris Field Found'
+    seoTitle: 'C-GRJP: Bermudians Identified as Marilyn Bean and Son Sergio Lottimore | Bermuda Observer',
+    h1: 'C-GRJP Air Ambulance: Bermudians Identified as Marilyn Bean and Son Sergio Lottimore'
   }));
 });
 // SSR article pages for every story — Google-indexable, shareable URLs.
