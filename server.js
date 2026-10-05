@@ -21,8 +21,8 @@ app.get([CGRJP_HUB, CGRJP_HUB + '/'], (req, res) => {
   if (!a) return res.redirect('/');
   res.send(ssr.renderArticle(a, newsroom.getArticles(), {
     canonical: ssr.SITE + CGRJP_HUB + '/',
-    seoTitle: 'C-GRJP Missing Air Ambulance Update: Gulfstream G100 Search Off Nantucket | Bermuda Observer',
-    h1: 'C-GRJP Missing Air Ambulance: Latest Search Updates'
+    seoTitle: 'C-GRJP: Coast Guard Suspends Search After Debris Field Found Off Nantucket | Bermuda Observer',
+    h1: 'C-GRJP Air Ambulance: Search Suspended, Debris Field Found'
   }));
 });
 // SSR article pages for every story — Google-indexable, shareable URLs.

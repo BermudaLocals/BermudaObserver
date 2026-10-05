@@ -561,6 +561,13 @@ async function run() {
         if (!item.title || !item.link) continue;
         const uKey = canonUrl(item.link), tKey = titleKey(item.title);
         if (seen.urls[uKey] || seen.titles[tKey]) continue;
+        // C-GRJP blocklist: the Bermuda Observer owns this story on the hub page —
+        // never import other outlets' versions (they 301-compete with our canonical URL).
+        if (/c-grjp|air ambulance|gulfstream g100|htt104|medical (flight|transport|aircraft)|med flight/i.test(item.title + ' ' + (item.contentSnippet || '') + ' ' + (item.content || ''))) {
+          seen.urls[uKey] = seen.titles[tKey] = Date.now();
+          console.log('[newsroom] C-GRJP dupe blocked:', item.title.slice(0, 70));
+          continue;
+        }
         seen.urls[uKey] = seen.titles[tKey] = Date.now();
         processed++; kept++;
         try {
