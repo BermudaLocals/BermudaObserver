@@ -138,7 +138,11 @@ function jsonLdArticle(a, canonicalUrl, imgUrl, h1) {
       '@type': 'NewsMediaOrganization',
       name: SITE_NAME,
       url: SITE,
-      logo: { '@type': 'ImageObject', url: SITE + '/images/bermuda-observer-editorial-logo.png' }
+      logo: { '@type': 'ImageObject', url: SITE + '/images/bermuda-observer-editorial-logo.png' },
+      sameAs: [
+        'https://www.instagram.com/bermudaobserver/',
+        'https://www.youtube.com/@BermudaObserver'
+      ]
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
     isAccessibleForFree: true,
@@ -214,6 +218,14 @@ figcaption{font-size:12px;color:var(--muted);padding:8px 2px 0;}
 .trust-nav a:hover{color:var(--ocean);}
 footer{background:#030d1a;color:#7a8fa5;padding:26px 0;font-size:12px;text-align:center;}
 .brand-logo{height:30px;width:auto;margin-right:9px;vertical-align:middle;border-radius:5px;}
+.statement-box{margin:24px 0;padding:20px 22px;background:#f4f8fb;border-left:4px solid var(--ocean);border-radius:0 10px 10px 0;}
+.statement-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ocean);font-weight:700;margin-bottom:10px;}
+.statement-box p{margin:0 0 12px;font-size:15.5px;line-height:1.65;}
+.statement-sig{font-size:13px;color:var(--muted);padding-top:10px;border-top:1px solid #dfe8f0;}
+.statement-sig a{color:var(--ocean);text-decoration:none;}
+.foot-social{margin-bottom:12px;}
+.foot-social a{display:inline-block;margin:0 10px;padding:6px 14px;border:1px solid #2a3d52;border-radius:20px;color:#9fb3c8;text-decoration:none;font-size:12px;}
+.foot-social a:hover{color:#fff;border-color:#4a6a8a;}
 .inline-graphic{margin:26px 0;background:#fff;border:1px solid #e8e4da;border-radius:10px;overflow:hidden;}
 .inline-graphic img{width:100%;height:auto;display:block;}
 .inline-graphic figcaption{padding:11px 14px;font-size:13px;color:var(--muted);line-height:1.5;border-top:1px solid #f0ece2;}
@@ -230,7 +242,13 @@ function trustNav() {
 }
 function pageFoot() {
   return trustNav() +
-    '<footer><div class="wrap">&copy; ' + new Date().getFullYear() + ' Bermuda Observer &middot; Bermuda\'s AI-Powered News &middot; Part of the Digital King Empire</div></footer></body></html>';
+    '<footer><div class="wrap">' +
+    '<div class="foot-social">' +
+    '<a href="https://www.instagram.com/bermudaobserver/" target="_blank" rel="noopener">Instagram</a>' +
+    '<a href="https://www.youtube.com/@BermudaObserver" target="_blank" rel="noopener">YouTube</a>' +
+    '</div>' +
+    '&copy; ' + new Date().getFullYear() + ' Bermuda Observer &middot; Where North East West South = News &middot; Bermuda\'s AI-Powered News &middot; Part of the Digital King Empire' +
+    '</div></footer></body></html>';
 }
 
 function topBar() {
@@ -253,6 +271,7 @@ function renderArticle(a, allArticles, opts) {
   const published = fmtDateTime(a.published_at || a.date);
   const updated = fmtDateTime(a.updated_at || a.published_at || a.date);
   const author = a.author || a.attribution || 'Bermuda Observer Staff';
+  const isCgrjp = /c-grjp|air ambulance|gulfstream/i.test((a.title || '') + ' ' + (a.body || ''));
 
   // Related: same category or keyword overlap, excluding self.
   const rel = (allArticles || []).filter(x => x.id !== a.id)
@@ -270,6 +289,14 @@ function renderArticle(a, allArticles, opts) {
     (published ? '<span>Published: ' + esc(published) + '</span>' : '') +
     (updated ? '<span class="updated-stamp">&#8635; Updated: ' + esc(updated) + '</span>' : '') +
     '</div>';
+  if (isCgrjp) {
+    html += '<div class="statement-box">' +
+      '<div class="statement-label">Official Statement &mdash; Bermuda Observer</div>' +
+      '<p><strong>C-GRJP DEBRIS RECOVERED OFF NANTUCKET &mdash; COAST GUARD SUSPENDS SEARCH FOR SIX.</strong></p>' +
+      '<p>Debris associated with the missing Bermuda-to-Boston medical transport aircraft C-GRJP has been located in the waters off Nantucket as the U.S. Coast Guard concludes its active search for the six people aboard. Approximately 2,840 square miles of ocean were searched. The extensive debris field lies roughly 20 miles off Nantucket in water approximately 80&ndash;90 feet deep. The six people aboard &mdash; four Canadian nationals and two Bermudians &mdash; remain unaccounted for. The cause of the incident has not been determined. Our thoughts remain with those aboard, their families and loved ones.</p>' +
+      '<div class="statement-sig">Bermuda Observer &middot; <em>Where North East West South = News.</em> &middot; <a href="https://www.instagram.com/bermudaobserver/" target="_blank" rel="noopener">Follow on Instagram</a> &middot; <a href="https://www.youtube.com/@BermudaObserver" target="_blank" rel="noopener">Watch on YouTube</a></div>' +
+      '</div>';
+  }
   if (a.video) {
     html += '<div class="video-embed"><iframe src="' + esc(a.video) + '" title="C-GRJP missing air ambulance video report" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>';
   }
@@ -278,7 +305,6 @@ function renderArticle(a, allArticles, opts) {
       (a.imageCredit ? '<figcaption>' + esc(a.imageCredit) + '</figcaption>' : '') + '</figure>';
   }
   // C-GRJP articles: graphics embedded inline at their matching sections; others: plain body
-  const isCgrjp = /c-grjp|air ambulance|gulfstream/i.test((a.title || '') + ' ' + (a.body || ''));
   html += '<div class="article-body">' +
     (isCgrjp ? bodyToHtmlInline(a.body || a.content || a.excerpt || a.summary)
              : bodyToHtml(a.body || a.content || a.excerpt || a.summary)) +
