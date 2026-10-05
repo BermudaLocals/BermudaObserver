@@ -2507,16 +2507,16 @@ body {
       <!-- HERO CAROUSEL — auto-rotating top 5 stories -->
       <div class="hero-carousel" id="hero-carousel">
         <div class="hero-slides" id="hero-slides">
-          <div class="hero-slide active" onclick="openArticle(0)">
-            <img class="hero-img" src="/images/hero.jpg" alt="Aerial view of Bermuda's coastline at sunrise with colorful cottages along the water" fetchpriority="high">
+          <div class="hero-slide active" style="cursor:pointer;" onclick="location.href='/c-grjp-missing-air-ambulance-bermuda-boston/'">
+            <img class="hero-img" src="/images/c-grjp-bermuda-search-operation.png" alt="C-GRJP: Bermudians Identified as Marilyn Bean and Son Sergio Lottimore" fetchpriority="high">
             <div class="hero-gradient"></div>
             <div class="hero-content">
-              <div class="hero-badge" id="hero-badge">Featured Story</div>
-              <h1 class="hero-title" id="hero-title">Loading latest Bermuda news...</h1>
-              <p class="hero-excerpt" id="hero-excerpt">Stay tuned for the latest updates from the BermudaObserver AI-powered newsroom.</p>
+              <div class="hero-badge" id="hero-badge" style="background:#c62828;">BREAKING NEWS &middot; C-GRJP</div>
+              <h1 class="hero-title" id="hero-title">C-GRJP: Bermudians Identified as Marilyn Bean and Son Sergio Lottimore</h1>
+              <p class="hero-excerpt" id="hero-excerpt">Bermuda Police officially confirm the two Bermudians aboard missing air ambulance C-GRJP. Latest flight data, debris analysis, and official statement.</p>
               <div class="hero-meta">
-                <span class="hero-source" id="hero-source">BermudaObserver</span>
-                <span class="hero-time" id="hero-time">Just now</span>
+                <span class="hero-source" id="hero-source">Bermuda Observer</span>
+                <span class="hero-time" id="hero-time">Developing</span>
               </div>
             </div>
           </div>
@@ -3359,6 +3359,10 @@ let heroTimer = null;
 const HERO_INTERVAL_MS = 6000;
 
 function renderHero() {
+  const CGRJP_HUB = '/c-grjp-missing-air-ambulance-bermuda-boston/';
+  // Pin C-GRJP as the top story in the hero carousel while developing.
+  var cIdx = allArticles.findIndex(a => a && /c-grjp|air ambulance|gulfstream/i.test((a.title || '') + ' ' + (a.body || '')));
+  if (cIdx > 0) { var cg = allArticles.splice(cIdx, 1)[0]; allArticles.unshift(cg); }
   heroStories = allArticles.slice(0, 5);
   if (!heroStories.length) return;
   const slidesEl = document.getElementById("hero-slides");
@@ -3384,7 +3388,13 @@ function renderHero() {
   `).join("");
 
   slidesEl.querySelectorAll(".hero-slide").forEach((slide, i) => {
-    slide.addEventListener("click", () => openArticle(allArticles.indexOf(heroStories[i])));
+    const st = heroStories[i];
+    if (st && /c-grjp|air ambulance|gulfstream/i.test((st.title || '') + ' ' + (st.body || ''))) {
+      slide.style.cursor = 'pointer';
+      slide.addEventListener('click', () => { location.href = CGRJP_HUB; });
+    } else {
+      slide.addEventListener("click", () => openArticle(allArticles.indexOf(heroStories[i])));
+    }
   });
 
   dotsEl.innerHTML = heroStories.map((a, i) =>

@@ -3126,13 +3126,25 @@ function renderAll() {
 }
 
 function renderHero() {
+  const CGRJP_HUB_URL = '/c-grjp-missing-air-ambulance-bermuda-boston/';
+  // Pin the C-GRJP hub story as the hero while it is the top developing story.
+  var cgrjpIdx = allArticles.findIndex(a => a && /c-grjp|air ambulance|gulfstream/i.test((a.title || '') + ' ' + (a.body || '')));
+  if (cgrjpIdx > 0) { var cg = allArticles.splice(cgrjpIdx, 1)[0]; allArticles.unshift(cg); }
   const art = allArticles[0];
   if (!art) return;
+  const isCgrjpHero = /c-grjp|air ambulance|gulfstream/i.test((art.title || '') + ' ' + (art.body || ''));
   document.getElementById('hero-title').textContent = art.title || 'Latest Bermuda News';
   document.getElementById('hero-excerpt').textContent = art.excerpt || art.summary || '' ;
   document.getElementById('hero-source').textContent = getSource(art);
   document.getElementById('hero-time').textContent = timeAgo(art.published_at);
   document.getElementById('hero-badge').textContent = (art.category || 'NEWS').toUpperCase();
+  if (isCgrjpHero) {
+    const card = document.getElementById('hero-card');
+    if (card) card.setAttribute('onclick', "location.href='" + CGRJP_HUB_URL + "'");
+    const himg = card && card.querySelector('.hero-img');
+    if (himg) { himg.src = '/images/c-grjp-bermuda-search-operation.png'; himg.alt = 'C-GRJP: the two Bermudians identified as Marilyn Lavonne Bean and her son Sergio Wayne Lottimore'; }
+    document.getElementById('hero-badge').textContent = 'BREAKING NEWS · C-GRJP';
+  }
 
   // Sub cards
   const sub = document.getElementById('hero-sub');
