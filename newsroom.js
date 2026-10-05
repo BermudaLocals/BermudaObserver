@@ -14,6 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const Parser = require('rss-parser');
+const media = require('./public/story-media');
 
 const DATA_DIR = path.join(__dirname, 'data');
 const ARTICLES_FILE = path.join(DATA_DIR, 'articles.json');
@@ -174,12 +175,26 @@ function saveStore() {
 // data/ is gitignored, so a fresh deploy (Railway) starts empty. data-seed/ IS
 // committed: merge any seeded articles/obits not already in the store, and mark
 // them seen so the next poll doesn't re-ingest duplicates of what we restored.
+// Only explicit editorial revisions replace existing runtime records.
+function applyEditorialSeed(current, seed) {
+  return current.map(a => {
+    const corrected = seed.find(x => media.isHub(x) && x.id === a.id);
+    return corrected && (corrected.editorialRevision || 0) > (a.editorialRevision || 0)
+      ? Object.assign({}, a, corrected) : a;
+  });
+}
+function retainArticles(items) {
+  const hub = items.find(media.isHub);
+  const rest = items.filter(a => !media.isHub(a)).sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+  return hub ? [hub, ...rest.slice(0, MAX_ARTICLES - 1)] : rest.slice(0, MAX_ARTICLES);
+}
 function mergeSeed() {
   try {
     const seedArticlesFile = path.join(SEED_DIR, 'articles.json');
     if (fs.existsSync(seedArticlesFile)) {
       const seedArticles = JSON.parse(fs.readFileSync(seedArticlesFile, 'utf8'));
       if (Array.isArray(seedArticles) && seedArticles.length) {
+        articles = applyEditorialSeed(articles, seedArticles);
         const have = new Set(articles.map(a => a && a.id));
         let added = 0;
         for (const a of seedArticles) {
@@ -190,7 +205,7 @@ function mergeSeed() {
         }
         if (added) {
           articles.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
-          articles = articles.slice(0, MAX_ARTICLES);
+          articles = retainArticles(articles);
         }
         console.log(`[newsroom] seed merge: ${added} articles restored (${articles.length} total)`);
       }
@@ -581,7 +596,7 @@ async function run() {
       stats.push({ feed: feed.name, fetched: (parsed.items || []).length, kept });
     }
     articles.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
-    articles = articles.slice(0, MAX_ARTICLES);
+    articles = retainArticles(articles);
     try { obitsAdded = await pollObituaries(); } catch (e) { console.warn('[newsroom] obituary poll failed:', e.message); }
     saveStore();
   } catch (e) {
@@ -598,13 +613,15 @@ function start() {
   mergeSeed();
   saveStore();
   console.log(`[newsroom] starting — ${articles.length} stored articles, ${obituaries.length} obituaries, polling every ${POLL_MS / 60000}min`);
+  if (process.env.NEWSROOM_DISABLE_POLL === '1') return;
   setTimeout(run, 3000);              // run once at boot (don't block listen)
   setInterval(run, POLL_MS);          // then on schedule
 }
 
 module.exports = {
   start,
-  getArticles: () => articles,
+  applyEditorialSeed, retainArticles,
+  getArticles: () => articles.filter(a => !media.HUB_ALIASES.includes(a.id) && !['64c520725b81', '2bf564aafd60', 'e402b3578c36'].includes(a.id)).map(media.normalize),
   getObituaries: () => obituaries,
   getStatus: () => ({
     articles: articles.length,

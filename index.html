@@ -2184,6 +2184,25 @@ body {
 .countdown-num { font-size: 18px; font-weight: 700; line-height: 1; }
 .countdown-label { font-size: 8px; opacity: 0.7; letter-spacing: 1px; }
 
+.hero-slide,.hero-card{color:inherit;text-decoration:none;}
+.media-label{position:absolute;left:6px;bottom:6px;max-width:calc(100% - 12px);z-index:2;background:rgba(0,0,0,.85);color:white;font-size:10px;line-height:1.3;padding:4px 6px;border-radius:3px;}
+.hero-slide>.media-label,.hero-card>.media-label{top:8px;bottom:auto;}
+.modal-media-credit{padding:10px 18px;font-size:12px;color:var(--text-secondary);}
+@media(max-width:480px){
+  .hero-title{font-size:22px!important;line-height:1.18!important;color:#fff;}
+  .hero-excerpt{display:none;}
+  .hero-slides{min-height:480px!important;}
+  .hero-slide .hero-img{height:300px;object-fit:contain;background:#102236;}
+  .hero-slide .hero-gradient{display:none;}
+  .hero-slide .hero-content{padding:16px!important;background:#102236;}
+  .hero-arrow{min-width:44px;min-height:44px;top:150px;}
+  .hero-dots{position:relative;top:auto;right:auto;justify-content:center;background:none;border:0;backdrop-filter:none;padding:0;gap:0;}
+  .hero-dot,.hero-dot.active,.hero-dot:hover{position:relative;width:44px;height:44px;min-width:44px;min-height:44px;border:0;background:none;box-shadow:none;transform:none;}
+  .hero-dot::after{content:'';position:absolute;left:18px;top:18px;width:8px;height:8px;border-radius:50%;background:#777;}
+  .hero-dot.active::after{background:var(--coral);}
+  .world-strip{margin:40px 0;max-width:100%;}
+  .sticky-nav{display:none;}
+}
 </style>
 </head>
 <body>
@@ -2211,7 +2230,7 @@ body {
 <div class="ticker-wrap">
   <div class="ticker-label">⚡ BREAKING</div>
   <div class="ticker-track" id="ticker-track">
-    <span class="ticker-item">Loading latest Bermuda news...</span>
+    <span class="ticker-item">C-GRJP Pilot Reportedly Told ATC Plane Was 'Coming In Blind'</span>
   </div>
 </div>
 
@@ -2297,19 +2316,20 @@ body {
     <div class="hero-main">
 
       <!-- HERO CARD -->
-      <div class="hero-card" id="hero-card" onclick="openArticle(0)">
-        <img class="hero-img" src="/images/hero.jpg" alt="Aerial view of Bermuda's coastline at sunrise with colorful cottages along the water" fetchpriority="high">
+      <a class="hero-card" id="hero-card" href="/c-grjp-missing-air-ambulance-bermuda-boston/">
+        <img class="hero-img" src="/images/c-grjp-coming-in-blind.png" alt="Supplied Coming In Blind editorial illustration — not documentary evidence" fetchpriority="high">
+            <span class="media-label">Editorial illustration · not documentary evidence</span>
         <div class="hero-gradient"></div>
         <div class="hero-content">
           <div class="hero-badge" id="hero-badge">Featured Story</div>
-          <h1 class="hero-title" id="hero-title">Loading latest Bermuda news...</h1>
-          <p class="hero-excerpt" id="hero-excerpt">Stay tuned for the latest updates from the BermudaObserver AI-powered newsroom.</p>
+          <h1 class="hero-title" id="hero-title">C-GRJP Pilot Reportedly Told ATC Plane Was 'Coming In Blind'</h1>
+          <p class="hero-excerpt" id="hero-excerpt">Air traffic control audio indicates the C-GRJP pilot reported electrical problems and told controllers the aircraft was 'coming in blind' before descending from approximately 24,000 feet as a storm approached. Latest confirmed details and expert analysis.</p>
           <div class="hero-meta">
             <span class="hero-source" id="hero-source">BermudaObserver</span>
             <span class="hero-time" id="hero-time">Just now</span>
           </div>
         </div>
-      </div>
+      </a>
 
       <!-- SUB CARDS -->
       <div class="hero-sub" id="hero-sub">
@@ -2855,6 +2875,7 @@ body {
   <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:85vh;overflow-y:auto;position:relative;">
     <button onclick="document.getElementById('article-modal').style.display='none'" style="position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.1);border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;z-index:2;">×</button>
     <div id="modal-img" style="height:280px;background:url('/images/hero.jpg') center/cover no-repeat;border-radius:16px 16px 0 0;"></div>
+    <p id="modal-image-credit" class="modal-media-credit"></p>
     <div style="padding:28px;">
       <div id="modal-cat" style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ocean-light);margin-bottom:10px;">NEWS</div>
       <h2 id="modal-title" style="font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:#1a1a1a;margin-bottom:14px;line-height:1.3;"></h2>
@@ -2881,6 +2902,7 @@ body {
   </div>
 </div>
 
+<script src="/story-media.js"></script>
 <script>
 // ============================================================
 // BERMUDA OBSERVER — JAVASCRIPT ENGINE
@@ -2991,7 +3013,7 @@ function startCupMatchCountdown(matchDate) {
     target.setHours(10, 0, 0, 0);
     const diff = target - now;
     if (diff <= 0) {
-      document.getElementById('countdown-bar').innerHTML = '🏏 CUP MATCH IS ON! Somerset vs St George's — LIVE!';
+      document.getElementById('countdown-bar').innerHTML = '🏏 CUP MATCH IS ON! Somerset vs St George\'s — LIVE!';
       return;
     }
     const d = Math.floor(diff / 86400000);
@@ -3055,14 +3077,16 @@ function getCatImage(cat, i) {
 }
 
 // Prefer the story's own photo (newsroom pipeline), fall back to category pool
-function getArtImg(a, i) {
-  return (a && a.image) ? a.image : getCatImage(a && a.category, i);
+function getArtImg(a, i) { return StoryMedia.media(a).image; }
+function escapeHtml(text) { return String(text || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function artImg(a, i, attrs) {
+  const m = StoryMedia.media(a);
+  return '<img src="' + m.image + '" alt="' + escapeHtml(m.imageAlt) + '" ' + (attrs || 'loading="lazy"') + '>' +
+    '<span class="media-label">' + escapeHtml(m.imageLabel) + '</span>';
 }
 
 const sources = ['Bernews', 'TNN BDA', 'Royal Gazette', 'BermudaObserver', 'The Island'];
-function getSource(article) {
-  return article.source || sources[Math.floor(Math.random() * sources.length)];
-}
+function getSource(article) { return article.source || 'Bermuda Observer'; }
 
 function timeAgo(dateStr) {
   if (!dateStr) return 'Just now';
@@ -3084,7 +3108,9 @@ async function fetchNews() {
     const data = await res.json();
     allArticles = Array.isArray(data) ? data : (data.articles || data.data || []);
   } catch (e) {
-    console.warn('API unavailable, using demo data');
+    console.warn('News API unavailable');
+    const unavailable = document.getElementById('live-article-count');
+    if (unavailable) unavailable.textContent = 'News feed temporarily unavailable';
     allArticles = getDemoArticles();
   }
   renderAll();
@@ -3092,22 +3118,7 @@ async function fetchNews() {
   updateLiveTimestamp();
 }
 
-function getDemoArticles() {
-  return [
-    { id:1, title:'Bermuda Premier Announces Major Infrastructure Investment for Hamilton Waterfront Revitalization', category:'government', source:'Royal Gazette', excerpt:'The Premier announced a $45 million commitment to redevelop Hamilton's waterfront, including new parks, cycling paths, and flood defenses set to begin construction by Q3 2026.', url:'#', published_at: new Date(Date.now()-3600000).toISOString() },
-    { id:2, title:'Cup Match 2026: Somerset Looking Strong as Preparations Begin at Wellington Oval', category:'sports', source:'Bernews', excerpt:'Somerset Cricket Club has unveiled their squad for this year's Cup Match with three new faces joining the lineup. Coaches report exceptional team morale heading into the annual clash.', url:'#', published_at: new Date(Date.now()-7200000).toISOString() },
-    { id:3, title:'Tourism Authority Reports Record Visitor Arrivals as Bermuda Rebounds to Pre-Pandemic Levels', category:'tourism', source:'TNN BDA', excerpt:'Bermuda welcomed 1.2 million visitors in the first half of 2026, a 34% increase year-over-year, with cruise arrivals leading the recovery in a sign of strong demand.', url:'#', published_at: new Date(Date.now()-10800000).toISOString() },
-    { id:4, title:'Bermuda Monetary Authority Releases New Digital Asset Regulatory Framework for 2026', category:'business', source:'Royal Gazette', excerpt:'The BMA has published updated guidelines for digital asset service providers operating in Bermuda, cementing the island's position as a world-leading crypto-friendly jurisdiction.', url:'#', published_at: new Date(Date.now()-14400000).toISOString() },
-    { id:5, title:'New Solar Farm Initiative to Power 30% of Bermuda's Electricity by 2028', category:'government', source:'Bernews', excerpt:'The Bermuda Government has approved a landmark solar energy project that will install panels across 200 rooftops and a new offshore floating solar array near Ferry Reach.', url:'#', published_at: new Date(Date.now()-18000000).toISOString() },
-    { id:6, title:'Local Restaurant Week Returns: Over 60 Hamilton Eateries Offering Special Menus', category:'tourism', source:'TNN BDA', excerpt:'Bermuda Restaurant Week kicks off next Monday with special prix-fixe menus at over 60 participating establishments, showcasing the island's world-class culinary scene.', url:'#', published_at: new Date(Date.now()-21600000).toISOString() },
-    { id:7, title:'St George's Cricket Club Announces New Youth Development Academy Partnership', category:'sports', source:'BermudaObserver', excerpt:'St George's Cricket Club has partnered with the Bermuda Cricket Board to launch a youth development academy providing free coaching for ages 8-16 across the island.', url:'#', published_at: new Date(Date.now()-25200000).toISOString() },
-    { id:8, title:'Bermuda's Tech Sector Sees 28% Growth as International Companies Establish Island Offices', category:'business', source:'Royal Gazette', excerpt:'A new BDA report reveals Bermuda attracted 18 new technology companies in the first half of 2026, creating over 400 high-paying jobs and injecting $180M into the economy.', url:'#', published_at: new Date(Date.now()-28800000).toISOString() },
-    { id:9, title:'Ministry of Health Launches Island-Wide Mental Health Initiative With Free Counselling Services', category:'government', source:'Bernews', excerpt:'Starting July 1, Bermuda residents will have access to six free counselling sessions per year under the new National Mental Health and Wellness programme.', url:'#', published_at: new Date(Date.now()-32400000).toISOString() },
-    { id:10, title:'Bermuda Ocean Conservation Group Reports Historic Sea Turtle Nesting Season', category:'news', source:'TNN BDA', excerpt:'Over 340 loggerhead sea turtle nests have been recorded along Bermuda's beaches this season, the highest count in recorded history, signaling a major conservation success story.', url:'#', published_at: new Date(Date.now()-36000000).toISOString() },
-    { id:11, title:'America's Cup Legacy: Bermuda's Sailing Scene Continues to Grow a Decade On', category:'sports', source:'BermudaObserver', excerpt:'Ten years after hosting the America's Cup, Bermuda's sailing community has grown by 45% with new marinas, international regattas, and youth programs cementing the island's sailing heritage.', url:'#', published_at: new Date(Date.now()-39600000).toISOString() },
-    { id:12, title:'New Direct Flight Routes Connecting Bermuda to Toronto and Miami Announced for Fall', category:'tourism', source:'Royal Gazette', excerpt:'Two new airlines have confirmed direct daily flights to Bermuda from Toronto Pearson and Miami International starting October 2026, significantly boosting winter tourism potential.', url:'#', published_at: new Date(Date.now()-43200000).toISOString() },
-  ];
-}
+function getDemoArticles() { return []; }
 
 // ============================================================
 // RENDER FUNCTIONS
@@ -3128,11 +3139,11 @@ function renderAll() {
 function renderHero() {
   const CGRJP_HUB_URL = '/c-grjp-missing-air-ambulance-bermuda-boston/';
   // Pin the C-GRJP hub story as the hero while it is the top developing story.
-  var cgrjpIdx = allArticles.findIndex(a => a && /c-grjp|air ambulance|gulfstream/i.test((a.title || '') + ' ' + (a.body || '')));
+  var cgrjpIdx = allArticles.findIndex(StoryMedia.isHub);
   if (cgrjpIdx > 0) { var cg = allArticles.splice(cgrjpIdx, 1)[0]; allArticles.unshift(cg); }
   const art = allArticles[0];
   if (!art) return;
-  const isCgrjpHero = /c-grjp|air ambulance|gulfstream/i.test((art.title || '') + ' ' + (art.body || ''));
+  const isCgrjpHero = StoryMedia.isHub(art);
   document.getElementById('hero-title').textContent = art.title || 'Latest Bermuda News';
   document.getElementById('hero-excerpt').textContent = art.excerpt || art.summary || '' ;
   document.getElementById('hero-source').textContent = getSource(art);
@@ -3140,9 +3151,9 @@ function renderHero() {
   document.getElementById('hero-badge').textContent = (art.category || 'NEWS').toUpperCase();
   if (isCgrjpHero) {
     const card = document.getElementById('hero-card');
-    if (card) card.setAttribute('onclick', "location.href='" + CGRJP_HUB_URL + "'");
+    if (card) card.href = StoryMedia.articleUrl(art);
     const himg = card && card.querySelector('.hero-img');
-    if (himg) { himg.src = '/images/c-grjp-bermuda-search-operation.png'; himg.alt = 'C-GRJP: the two Bermudians identified as Marilyn Lavonne Bean and her son Sergio Wayne Lottimore'; }
+    if (himg) { himg.src = getArtImg(art, 0); himg.alt = StoryMedia.media(art).imageAlt; }
     document.getElementById('hero-badge').textContent = 'BREAKING NEWS · C-GRJP';
   }
 
@@ -3152,7 +3163,7 @@ function renderHero() {
   sub.innerHTML = subArts.map((a, i) => `
     <div class="sub-card" onclick="openArticle(${i+1})">
       <div class="sub-card-img">
-        <img src="${getArtImg(a, i)}" alt="${(a.category || 'News')} — Bermuda" loading="lazy">
+        ${artImg(a, i, 'loading="lazy"')}
       </div>
       <div class="sub-card-body">
         <span class="sub-card-cat">${(a.category || 'News').toUpperCase()}</span>
@@ -3188,7 +3199,7 @@ function renderGovSection() {
   const fallbackArts = arts.length ? arts : allArticles.slice(0, 6);
   grid.innerHTML = fallbackArts.map((a, i) => `
     <div class="gov-card">
-      <div class="gov-card-img"><img src="${getArtImg(a, i)}" alt="${(a.category || 'Government')} — Bermuda" loading="lazy"></div>
+      <div class="gov-card-img">${artImg(a, i, 'loading="lazy"')}</div>
       <div class="gov-card-body">
         <div class="gov-card-title">${a.title}</div>
         <div class="gov-card-meta">📅 ${timeAgo(a.published_at)} &nbsp;·&nbsp; ${getSource(a)}</div>
@@ -3224,7 +3235,7 @@ function createArticleCard(article, index) {
   return `
     <div class="article-card reveal" onclick="openArticle(${index})">
       <div class="article-thumb">
-        <img src="${getArtImg(article, index)}" alt="${(article.category || 'News')} — Bermuda" loading="lazy">
+        ${artImg(article, index, 'loading="lazy"')}
         <span class="article-cat-badge ${catClass}">${(article.category || 'News').toUpperCase()}</span>
         <span class="source-badge">${getSource(article)}</span>
       </div>
@@ -3270,9 +3281,12 @@ function openArticle(index) {
     attrib.style.display = 'none';
   }
   const link = document.getElementById('modal-link');
-  link.href = article.url || '#';
+  link.href = StoryMedia.articleUrl(article);
   const img = document.getElementById('modal-img');
   img.style.backgroundImage = `url('${getArtImg(article, index)}')`;
+  img.setAttribute('role', 'img');
+  img.setAttribute('aria-label', StoryMedia.media(article).imageAlt);
+  document.getElementById('modal-image-credit').textContent = StoryMedia.media(article).imageCredit;
   modal.style.display = 'flex';
 }
 
@@ -3303,7 +3317,7 @@ function liveSearch(query) {
   results.innerHTML = matches.map((a, i) => `
     <div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.03)'" onmouseout="this.style.background=''"
       onclick="document.getElementById('search-modal').style.display='none';openArticle(${allArticles.indexOf(a)});">
-      <img class="search-thumb" src="${getArtImg(a, i)}" alt="" loading="lazy">
+      ${artImg(a, i, 'loading="lazy"')}
       <div>
         <div style="font-size:13px;font-weight:600;color:#1a1a1a;">${a.title}</div>
         <div style="font-size:11px;color:#999;margin-top:3px;">${(a.category||'News').toUpperCase()} · ${timeAgo(a.published_at)}</div>

@@ -4,6 +4,7 @@
 // Google sees full HTML — not an empty SPA shell.
 // ═══════════════════════════════════════════════════════════
 const path = require('path');
+const media = require('./public/story-media');
 
 const SITE = 'https://bermudaobserver.com';
 const SITE_NAME = 'Bermuda Observer';
@@ -34,78 +35,28 @@ function fmtDateTime(iso) {
   return fmtDate(iso, { hour: 'numeric', minute: '2-digit', hour12: true }) + ' ADT';
 }
 
-// Image filename/ALT SEO map — descriptive names for Google Images.
-const IMAGE_SEO = {
-  '/images/breaking/c-grjp-gulfstream-g100-missing-air-ambulance.jpg':
-    'C-GRJP Gulfstream G100 missing air ambulance — file photo of the Canadian-registered medical jet that disappeared flying from Bermuda to Boston',
-  '/images/breaking/c-grjp-bermuda-boston-air-ambulance-search-nantucket.jpg':
-    'C-GRJP Bermuda to Boston air ambulance search off Nantucket — U.S. Coast Guard operation for the missing Gulfstream G100',
-  '/images/c-grjp-flight-data-sonar-search.png':
-    'C-GRJP flight data and sonar search — flight tracking records and underwater sonar operation for the missing Bermuda to Boston air ambulance',
-  '/images/c-grjp-flight-data-raises-questions.png':
-    'C-GRJP flight data raises questions — altitude and speed records from the Gulfstream G100 air ambulance before it vanished south of Nantucket',
-  '/images/c-grjp-flight-data-mystery-search.png':
-    'C-GRJP flight data mystery — search crews compare tracking records as the Bermuda air ambulance disappearance investigation continues',
-  '/images/c-grjp-15-minute-flight-electrical-trouble.png':
-    'C-GRJP 15-minute flight electrical trouble — the missing air ambulance climbed for only 15 minutes and may have suffered an electrical emergency',
-  '/images/c-grjp-hamilton-flight-path-emergency.png':
-    'C-GRJP Hamilton flight path emergency — the Gulfstream G100 departed Bermuda on October 1 with a reported electrical emergency before going missing',
-  '/images/c-grjp-search-enters-new-phase.png':
-    'C-GRJP search enters new phase — U.S. Coast Guard and partner agencies shift strategy in the hunt for the missing Bermuda air ambulance',
-  '/images/c-grjp-breaking-news-search-intensifies.png':
-    'Breaking news: Bermuda search intensifies for C-GRJP — air and sea assets expand the grid south of Nantucket for the missing Gulfstream G100',
-  '/images/c-grjp-breaking-news-debris-confirmed.png':
-    'Breaking news: debris confirmed in C-GRJP search — investigators work to identify wreckage linked to the missing Bermuda to Boston air ambulance',
-  '/images/c-grjp-breaking-news-debris-found.png':
-    'Breaking news: debris found, search continues for C-GRJP — recovery teams examine possible wreckage from the missing Gulfstream G100 air ambulance',
-  '/images/c-grjp-bermuda-search-operation.png':
-    'Breaking news: Bermuda search operation for C-GRJP — the multi-agency effort for the air ambulance carrying Bermudians Marilyn Lavonne Bean and Sergio Wayne Lottimore',
-};
-
-// C-GRJP inline graphic placement — each graphic embedded at its matching section.
-const CGRJP_PLACEMENT = [
-  { kw: /police identify|marilyn lavonne bean|sergio wayne lottimore/i, src: '/images/c-grjp-bermuda-search-operation.png', cap: 'Bermuda Police have identified the two Bermudians aboard C-GRJP as Marilyn Lavonne Bean, 66, and her son Sergio Wayne Lottimore, 41. A BPS Family Liaison Officer is assisting the family.' },
-  { kw: /15-minute hamilton flight/i, src: '/images/c-grjp-15-minute-flight-electrical-trouble.png', cap: 'The 15-minute flight out of Hamilton — tracking data shows a climb, then silence. Investigators are examining a possible electrical emergency.' },
-  { kw: /15-minute hamilton flight/i, src: '/images/c-grjp-hamilton-flight-path-emergency.png', cap: 'C-GRJP\'s flight path out of Hamilton, Bermuda on October 1, with the reported electrical emergency window highlighted.' },
-  { kw: /descended rapidly|rapid descent|24,000 feet/i, src: '/images/c-grjp-flight-data-raises-questions.png', cap: 'Flight-tracking records show C-GRJP descended rapidly from approximately 24,000 feet — data that raises questions about the aircraft\'s final minutes.' },
-  { kw: /government of bermuda confirms|premier david burt/i, src: '/images/c-grjp-breaking-news-search-intensifies.png', cap: 'Breaking: the search for C-GRJP intensified as Bermuda\'s government confirmed the aircraft missing with six people on board.' },
-  { kw: /air and surface crews|search and rescue operations/i, src: '/images/c-grjp-breaking-news-debris-found.png', cap: 'Debris located during the U.S. Coast Guard grid search off Nantucket — recovery teams moved in as the search continued.' },
-  { kw: /air and surface crews|search and rescue operations/i, src: '/images/c-grjp-breaking-news-debris-confirmed.png', cap: 'Officials work to confirm whether recovered debris is linked to the missing Gulfstream G100 air ambulance.' },
-  { kw: /gulfstream g100|twin-engine business jet/i, src: '/images/c-grjp-flight-data-mystery-search.png', cap: 'The Gulfstream G100 mystery — investigators compare flight data against the expanding search grid south of Nantucket.' },
-  { kw: /at a glance/i, src: '/images/c-grjp-search-enters-new-phase.png', cap: 'The search for C-GRJP enters a new phase as agencies reassess the operation and redeploy assets.' },
-  { kw: /developing story|provide updates/i, src: '/images/c-grjp-flight-data-sonar-search.png', cap: 'Flight data and sonar now guide the underwater phase of the search for the missing Bermuda to Boston air ambulance.' }
-];
-function inlineGraphicFig(g, eager) {
-  return '<figure class="inline-graphic"><img src="' + esc(g.src) + '" alt="' + imgAlt(g.src, '') + '"' +
-    (eager ? ' loading="eager"' : ' loading="lazy"') + '><figcaption>' + esc(g.cap) + '</figcaption></figure>';
+// Reviewed hub-only graphic; no keyword matching or unmatched appendices.
+const CGRJP_PLACEMENT = [{
+  section: 'Police Identify the Two Bermudians Aboard C-GRJP',
+  src: '/images/c-grjp-bermuda-search-operation.png',
+  alt: 'Supplied editorial composite naming Marilyn Lavonne Bean and Sergio Wayne Lottimore; not authenticated incident imagery',
+  cap: 'Bermuda Observer — supplied editorial composite accompanying the Bermuda Police identity update. Portraits supplied by the user; their provenance is not independently verified here. Aircraft and rescue scenes are illustrative, not photographs of the incident.'
+}];
+function inlineGraphicFig(g) {
+  return '<figure class="inline-graphic"><img src="' + esc(g.src) + '" alt="' + esc(g.alt) + '" loading="lazy"><figcaption>' + esc(g.cap) + '</figcaption></figure>';
 }
-// Render body with C-GRJP graphics interleaved at their matching sections (each used once, in order).
 function bodyToHtmlInline(body) {
-  if (!body) return '';
   const used = new Set();
-  const parts = String(body).split(/\n{2,}/);
-  let out = '';
-  for (const p of parts) {
+  return String(body || '').split(/\n{2,}/).map(p => {
     const t = p.trim();
-    if (!t) continue;
-    let html;
-    if (t.length < 60 && !/[.!?]$/.test(t) && !/^UPDATE/i.test(t) && t.split(' ').length <= 7) {
-      html = '<h2>' + esc(t) + '</h2>';
-    } else {
-      html = '<p>' + esc(t).replace(/\n/g, '<br>') + '</p>';
-    }
-    out += html + '\n';
+    let html = bodyToHtml(t);
     CGRJP_PLACEMENT.forEach((g, i) => {
-      if (!used.has(i) && g.kw.test(t)) { used.add(i); out += inlineGraphicFig(g, used.size === 1) + '\n'; }
+      if (!used.has(i) && t === g.section) { used.add(i); html += inlineGraphicFig(g); }
     });
-  }
-  // Any unmatched graphics trail the body so none are ever dropped.
-  CGRJP_PLACEMENT.forEach((g, i) => { if (!used.has(i)) { out += inlineGraphicFig(g, false) + '\n'; } });
-  return out;
+    return html;
+  }).join('\n');
 }
-function imgAlt(src, fallbackTitle) {
-  return IMAGE_SEO[src] || (fallbackTitle ? esc(fallbackTitle) + ' — Bermuda Observer' : 'Bermuda Observer news image');
-}
+function imgAlt(src, fallbackTitle) { return esc(fallbackTitle || 'Illustrative news image'); }
 
 function artImage(a) {
   let img = a && a.image;
@@ -263,6 +214,7 @@ function topBar() {
 
 // ── Article SSR page ──
 function renderArticle(a, allArticles, opts) {
+  a = media.normalize(a);
   const o = opts || {};
   const slug = slugify(a.title);
   const canonical = o.canonical || (SITE + '/article/' + a.id + '/' + slug + '/');
@@ -274,7 +226,7 @@ function renderArticle(a, allArticles, opts) {
   const published = fmtDateTime(a.published_at || a.date);
   const updated = fmtDateTime(a.updated_at || a.published_at || a.date);
   const author = a.author || a.attribution || 'Bermuda Observer Staff';
-  const isCgrjp = /c-grjp|air ambulance|gulfstream/i.test((a.title || '') + ' ' + (a.body || ''));
+  const isCgrjp = media.isHub(a);
 
   // Related: same category or keyword overlap, excluding self.
   const rel = (allArticles || []).filter(x => x.id !== a.id)
@@ -294,7 +246,7 @@ function renderArticle(a, allArticles, opts) {
     '</div>';
   if (isCgrjp) {
     html += '<div class="statement-box">' +
-      '<div class="statement-label">Official Statement &mdash; Bermuda Observer</div>' +
+      '<div class="statement-label">Latest Status &mdash; Summary of Supplied Reporting</div>' +
       '<p><strong>C-GRJP DEBRIS RECOVERED OFF NANTUCKET &mdash; COAST GUARD SUSPENDS SEARCH FOR SIX.</strong></p>' +
       '<p>Debris associated with the missing Bermuda-to-Boston medical transport aircraft C-GRJP has been located in the waters off Nantucket as the U.S. Coast Guard concludes its active search for the six people aboard. Approximately 2,840 square miles of ocean were searched. The extensive debris field lies roughly 20 miles off Nantucket in water approximately 80&ndash;90 feet deep. The six people aboard &mdash; four Canadian nationals and two Bermudians &mdash; remain unaccounted for. The cause of the incident has not been determined. Our thoughts remain with those aboard, their families and loved ones.</p>' +
       '<div class="statement-sig">Bermuda Observer &middot; <em>Where North East West South = News.</em> &middot; <a href="https://www.instagram.com/bermudaobserver/" target="_blank" rel="noopener">Follow on Instagram</a> &middot; <a href="https://www.youtube.com/@BermudaObserver" target="_blank" rel="noopener">Watch on YouTube</a></div>' +
@@ -304,7 +256,7 @@ function renderArticle(a, allArticles, opts) {
     html += '<div class="video-embed"><iframe src="' + esc(a.video) + '" title="C-GRJP missing air ambulance video report" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>';
   }
   if (imgPath || a.image) {
-    html += '<figure><img src="' + esc(imgUrl) + '" alt="' + imgAlt(imgPath || a.image, a.title) + '" loading="eager" fetchpriority="high">' +
+    html += '<figure><img src="' + esc(imgUrl) + '" alt="' + esc(a.imageAlt) + '" loading="eager" fetchpriority="high">' +
       (a.imageCredit ? '<figcaption>' + esc(a.imageCredit) + '</figcaption>' : '') + '</figure>';
   }
   // C-GRJP articles: graphics embedded inline at their matching sections; others: plain body
@@ -312,13 +264,16 @@ function renderArticle(a, allArticles, opts) {
     (isCgrjp ? bodyToHtmlInline(a.body || a.content || a.excerpt || a.summary)
              : bodyToHtml(a.body || a.content || a.excerpt || a.summary)) +
     '</div>';
+  if (isCgrjp && a.fileImage) {
+    html += '<figure><img src="' + esc(a.fileImage) + '" alt="C-GRJP on the ground — credited aircraft file photo, not incident photography" loading="lazy"><figcaption>' + esc(a.fileImageCredit) + '</figcaption></figure>';
+  }
   if (a.url && a.url !== '#') {
     html += '<div class="attribution">Based on reporting by ' + esc(a.source || 'the original publisher') + ' &mdash; <a href="' + esc(a.url) + '" target="_blank" rel="noopener">read the original &#8599;</a></div>';
   }
   if (rel.length) {
     html += '<div class="related"><h3>Related Coverage</h3>';
     for (const r of rel) {
-      const rslug = (/c-grjp|air ambulance/i.test(r.title||'')) ? '/c-grjp-missing-air-ambulance-bermuda-boston/' : ('/article/' + r.id + '/' + slugify(r.title) + '/');
+      const rslug = media.articleUrl(r);
       html += '<a href="' + rslug + '">' + esc(r.title) + '</a>';
     }
     html += '</div>';
@@ -376,7 +331,7 @@ function renderSitemap(articles, hubUrl) {
   ];
   for (const a of articles || []) {
     if (!a || !a.id || !a.title) continue;
-    const isHub = /c-grjp|air ambulance/i.test(a.title + (a.body||''));
+    const isHub = media.isHub(a);
     urls.push({
       loc: isHub ? hubUrl : (SITE + '/article/' + a.id + '/' + slugify(a.title) + '/'),
       lastmod: (a.updated_at || a.published_at || a.date || '').slice(0, 10) || undefined,

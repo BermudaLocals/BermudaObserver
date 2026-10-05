@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const newsroom = require('./newsroom');
 const ssr = require('./ssr');
+const media = require('./public/story-media');
 const app = express();
 const PORT = process.env.PORT || 3025;
 app.use(cors()); app.use(express.json());
@@ -13,24 +14,22 @@ app.use(cors()); app.use(express.json());
 const CGRJP_HUB = '/c-grjp-missing-air-ambulance-bermuda-boston';
 function findCGRJP() {
   const arts = newsroom.getArticles();
-  return arts.find(a => a && a.id === 'ca7a9c9f9763')
-      || arts.find(a => a && /c-grjp|air ambulance/i.test((a.title || '') + (a.body || '')));
+  return arts.find(media.isHub);
 }
 app.get([CGRJP_HUB, CGRJP_HUB + '/'], (req, res) => {
   const a = findCGRJP();
   if (!a) return res.redirect('/');
   res.send(ssr.renderArticle(a, newsroom.getArticles(), {
-    canonical: ssr.SITE + CGRJP_HUB + '/',
-    seoTitle: 'C-GRJP Pilot Reportedly Told ATC Plane Was \'Coming In Blind\' | Bermuda Observer',
-    h1: 'C-GRJP Pilot Reportedly Told ATC Plane Was \'Coming In Blind\''
+    canonical: ssr.SITE + CGRJP_HUB + '/'
   }));
 });
 // SSR article pages for every story — Google-indexable, shareable URLs.
 app.get('/article/:id/:slug?', (req, res) => {
+  if (media.HUB_ALIASES.includes(req.params.id)) return res.redirect(301, CGRJP_HUB + '/');
   const a = newsroom.getArticles().find(x => x && x.id === req.params.id);
   if (!a) return res.redirect('/');
   // C-GRJP-family stories all canonicalise to the single hub URL.
-  if (/c-grjp|air ambulance|gulfstream g100/i.test((a.title || '') + (a.body || ''))) {
+  if (media.isHub(a) || media.HUB_ALIASES.includes(a.id)) {
     return res.redirect(301, CGRJP_HUB + '/');
   }
   res.send(ssr.renderArticle(a, newsroom.getArticles()));
