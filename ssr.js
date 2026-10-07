@@ -56,6 +56,16 @@ function bodyToHtmlInline(body) {
     return html;
   }).join('\n');
 }
+const APOLOGY_HTML =
+  '<div class="apology-box">' +
+  '<div class="apology-label">Correction &amp; Apology</div>' +
+  '<p>Bermuda Observer wishes to sincerely apologize for the use of an incorrect photograph in an earlier post concerning the two Bermudians aboard the missing air ambulance, C-GRJP.</p>' +
+  '<p>The Bermuda Police Service officially confirmed the two Bermudian nationals as 66-year-old Marilyn Lavonne Bean and her 41-year-old son, Sergio Wayne Lottimore.</p>' +
+  '<p>We have corrected our coverage to reflect the appropriate photographs.</p>' +
+  '<p>We regret the error and apologize to the family, friends and loved ones of Ms. Bean and Mr. Lottimore, as well as to our readers. We understand the importance of accuracy and sensitivity, particularly during such a difficult time.</p>' +
+  '<p>Our heartfelt condolences remain with their family and everyone affected by this tragedy.</p>' +
+  '<div class="apology-sig">Bermuda Observer &middot; <em>Where North East West South = News.</em></div>' +
+  '</div>';
 function imgAlt(src, fallbackTitle) { return esc(fallbackTitle || 'Illustrative news image'); }
 
 function artImage(a) {
@@ -177,6 +187,10 @@ footer{background:#030d1a;color:#7a8fa5;padding:26px 0;font-size:12px;text-align
 .statement-box p{margin:0 0 12px;font-size:15.5px;line-height:1.65;}
 .statement-sig{font-size:13px;color:var(--muted);padding-top:10px;border-top:1px solid #dfe8f0;}
 .statement-sig a{color:var(--ocean);text-decoration:none;}
+.apology-box{margin:24px 0;padding:20px 22px;background:#fff8f0;border-left:4px solid #c62828;border-radius:0 10px 10px 0;}
+.apology-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#c62828;font-weight:700;margin-bottom:10px;}
+.apology-box p{margin:0 0 12px;font-size:15.5px;line-height:1.65;}
+.apology-sig{font-size:13px;color:var(--muted);padding-top:10px;border-top:1px solid #f0e0d0;}
 .foot-social{margin-bottom:12px;}
 .foot-social a{display:inline-block;margin:0 10px;padding:6px 14px;border:1px solid #2a3d52;border-radius:20px;color:#9fb3c8;text-decoration:none;font-size:12px;}
 .foot-social a:hover{color:#fff;border-color:#4a6a8a;}
@@ -251,6 +265,7 @@ function renderArticle(a, allArticles, opts) {
       '<p>Debris associated with the missing Bermuda-to-Boston medical transport aircraft C-GRJP has been located in the waters off Nantucket as the U.S. Coast Guard concludes its active search for the six people aboard. Approximately 2,840 square miles of ocean were searched. The extensive debris field lies roughly 20 miles off Nantucket in water approximately 80&ndash;90 feet deep. The six people aboard &mdash; four Canadian nationals and two Bermudians &mdash; remain unaccounted for. The cause of the incident has not been determined. Our thoughts remain with those aboard, their families and loved ones.</p>' +
       '<div class="statement-sig">Bermuda Observer &middot; <em>Where North East West South = News.</em> &middot; <a href="https://www.instagram.com/bermudaobserver/" target="_blank" rel="noopener">Follow on Instagram</a> &middot; <a href="https://www.youtube.com/@BermudaObserver" target="_blank" rel="noopener">Watch on YouTube</a></div>' +
       '</div>';
+    html += APOLOGY_HTML;
   }
   if (a.video) {
     html += '<div class="video-embed"><iframe src="' + esc(a.video) + '" title="C-GRJP missing air ambulance video report" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>';
@@ -316,6 +331,8 @@ function renderCorrections() {
     '<p>Bermuda Observer is committed to accuracy. When we get something wrong, we fix it.</p>' +
     '<p><strong>How to request a correction:</strong> Email <a href="mailto:news@bermudaobserver.com">news@bermudaobserver.com</a> with the article URL, the information you believe is incorrect, and any supporting evidence.</p>' +
     '<p><strong>What we do:</strong> Substantive errors are corrected in the article text with an &ldquo;Updated&rdquo; timestamp. Where a correction changes the meaning of a story, a note is added at the foot of the article recording what was changed and when.</p>' +
+    APOLOGY_HTML +
+    '<p><strong>Published correction record &mdash; C-GRJP coverage.</strong> An incorrect photograph was used in an earlier post concerning the two Bermudians aboard missing air ambulance C-GRJP. The Bermuda Police Service confirmed the two Bermudian nationals as Marilyn Lavonne Bean, 66, and her son Sergio Wayne Lottimore, 41. Coverage has been corrected and the apology above published in full.</p>' +
     '<p>Minor typographical errors may be fixed without a formal note.</p>');
 }
 
