@@ -88,6 +88,25 @@ function bodyToHtml(body) {
   }).join('\n');
 }
 
+function adSlot(label) {
+  return '<div class="ad-slot" role="complementary" aria-label="Advertisement">' +
+    '<a class="ad-unsold" href="/classifieds">' +
+    '<span class="ad-tag">ADVERTISEMENT</span>' +
+    '<span class="ad-title">Place your ad here</span>' +
+    '<span class="ad-sub">' + esc(label) + ' &mdash; your brand in front of Bermuda Observer readers</span>' +
+    '</a></div>';
+}
+
+// Splice a display slot into rendered body HTML after N paragraphs.
+// Short articles (fewer paragraphs) are left alone — a mid slot needs room.
+function spliceAd(htmlStr, afterParas, label) {
+  const parts = String(htmlStr).split('</p>');
+  if (parts.length <= afterParas + 1) return htmlStr;
+  return parts.slice(0, afterParas).join('</p>') + '</p>\n' +
+    adSlot(label) + '\n' +
+    parts.slice(afterParas).join('</p>');
+}
+
 function jsonLdArticle(a, canonicalUrl, imgUrl, h1) {
   const ld = {
     '@context': 'https://schema.org',
@@ -197,6 +216,12 @@ footer{background:#030d1a;color:#7a8fa5;padding:26px 0;font-size:12px;text-align
 .inline-graphic{margin:26px 0;background:#fff;border:1px solid #e8e4da;border-radius:10px;overflow:hidden;}
 .inline-graphic img{width:100%;height:auto;display:block;}
 .inline-graphic figcaption{padding:11px 14px;font-size:13px;color:var(--muted);line-height:1.5;border-top:1px solid #f0ece2;}
+.ad-slot{margin:24px auto;}
+.ad-slot .ad-unsold{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:100px;padding:18px;border:2px dashed #b6c8d4;border-radius:10px;background:#eef4f9;text-decoration:none;text-align:center;transition:background .15s,border-color .15s;}
+.ad-slot .ad-unsold:hover{background:#e2edf5;border-color:var(--ocean-light);}
+.ad-slot .ad-tag{font-size:10px;font-weight:700;letter-spacing:2px;color:#8aa2b2;}
+.ad-slot .ad-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:900;color:var(--ocean);}
+.ad-slot .ad-sub{font-size:12px;color:var(--muted);}
 @media(max-width:480px){.byline{gap:6px 12px;}h1{font-size:27px;}}
 `;
 
@@ -274,17 +299,20 @@ function renderArticle(a, allArticles, opts) {
     html += '<figure><img src="' + esc(imgUrl) + '" alt="' + esc(a.imageAlt) + '" loading="eager" fetchpriority="high">' +
       (a.imageCredit ? '<figcaption>' + esc(a.imageCredit) + '</figcaption>' : '') + '</figure>';
   }
+  // Display-ad spots ("Place your ad here"). None on the C-GRJP hub —
+  // a tragedy story with a statement box is no place for ad creative.
+  if (!isCgrjp) html += adSlot('Leaderboard');
   // C-GRJP articles: graphics embedded inline at their matching sections; others: plain body
-  html += '<div class="article-body">' +
-    (isCgrjp ? bodyToHtmlInline(a.body || a.content || a.excerpt || a.summary)
-             : bodyToHtml(a.body || a.content || a.excerpt || a.summary)) +
-    '</div>';
+  const bodyHtml = isCgrjp ? bodyToHtmlInline(a.body || a.content || a.excerpt || a.summary)
+                           : spliceAd(bodyToHtml(a.body || a.content || a.excerpt || a.summary), 2, 'In-article');
+  html += '<div class="article-body">' + bodyHtml + '</div>';
   if (isCgrjp && a.fileImage) {
     html += '<figure><img src="' + esc(a.fileImage) + '" alt="C-GRJP on the ground — credited aircraft file photo, not incident photography" loading="lazy"><figcaption>' + esc(a.fileImageCredit) + '</figcaption></figure>';
   }
   if (a.url && a.url !== '#') {
     html += '<div class="attribution">Based on reporting by ' + esc(a.source || 'the original publisher') + ' &mdash; <a href="' + esc(a.url) + '" target="_blank" rel="noopener">read the original &#8599;</a></div>';
   }
+  if (!isCgrjp) html += adSlot('Footer banner');
   if (rel.length) {
     html += '<div class="related"><h3>Related Coverage</h3>';
     for (const r of rel) {
@@ -314,6 +342,7 @@ function renderContact() {
   return trustPage('Contact', 'Contact Bermuda Observer',
     '<p>News tips, corrections and enquiries:</p>' +
     '<p><strong>Email:</strong> <a href="mailto:news@bermudaobserver.com">news@bermudaobserver.com</a></p>' +
+    '<p><strong>Advertising:</strong> display spots are available across the homepage, section pages and every article ("Place your ad here" placements). Email <a href="mailto:news@bermudaobserver.com">news@bermudaobserver.com</a> with the subject line <em>Advertising</em> for rates and availability.</p>' +
     '<p>For breaking news and aviation, marine or public-safety matters, please include any primary sources (official statements, tracking data, photographs) so our team can verify information quickly.</p>' +
     '<p>We aim to acknowledge all editorial correspondence within one business day.</p>');
 }
